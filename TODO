@@ -1,0 +1,20 @@
+wait for Ben:
+1. get PDB by code from PDB database - check lowercase/uppercase tolerance in the pdb code
+2. get rid of the password for job access
+3. automatic resubmit for jobs
+4. deljob - multiple jobs
+5. move get chain to framework
+6. automatic start after modbase shutdown
+
+Important:
+00. run check_required_email from framework.
+0. server.log/trace.log - after the job has finished
+1. FAQ and download pages
+2. add JMOL display
+3. support 2-3 sampling levels: fast, medium, slow
+4. add option to download top100
+5. improve logo
+6. add download link to zipped fit files in foxs
+7. add symmdock
+8. add binding sites like in PatchDock
+

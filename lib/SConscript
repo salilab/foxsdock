@@ -1,0 +1,4 @@
+Import('env')
+
+env.InstallPerl(['foxsdock.pm', 'idock.pm'])
+env.InstallHTML(['monomer.pdb', 'hliq.dat'])
