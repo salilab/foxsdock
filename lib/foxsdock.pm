@@ -103,7 +103,7 @@ sub get_footer {
 <table><tr><td halign='left'>If you use FoXSDock, please cite:</td></tr></table>
 <div id='address'> Schneidman-Duhovny D, Hammel M, Sali A. Macromolecular docking restrained by a small angle X-ray scattering profile.
 J Struct Biol. 2010 [<a href=\"http://dx.doi.org/10.1016/j.jsb.2010.09.023\"> Abstract </a>] <br>
-Schneidman-Duhovny D, Hammel M, Tainer JA, and Sali A. FoXS, FoXSDock and MultiFoXS: Single-state and multi-state structural modeling of proteins and their complexes based on SAXS profiles. NAR 2016 [ <a href = \"//nar.oxfordjournals.org/content/early/2016/05/05/nar.gkw389.full\"> FREE Full Text </a> ] <br>
+Schneidman-Duhovny D, Hammel M, Tainer JA, and Sali A. FoXS, FoXSDock and MultiFoXS: Single-state and multi-state structural modeling of proteins and their complexes based on SAXS profiles. NAR 2016 [ <a href = \"//doi.org/10.1093/nar/gkw389\"> FREE Full Text </a> ] <br>
     <p> <p>Contact: <script>escramble(\"dina\",\"salilab.org\")</script><br></div>\n";
 }
 
