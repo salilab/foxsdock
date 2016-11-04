@@ -24,5 +24,6 @@ f.InstallHTML(['idock/html/metro/docs/bootstrap.js',
 Export('env')
 SConscript('python/foxsdock/SConscript')
 SConscript('lib/SConscript')
+SConscript('html/SConscript')
 SConscript('txt/SConscript')
 SConscript('test/SConscript')
