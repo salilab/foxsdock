@@ -55,7 +55,7 @@ sub get_help_page {
 }
 
 sub new {
-  return saliweb::frontend::new(@_, @CONFIG@);
+  return saliweb::frontend::new(@_, "##CONFIG##");
 }
 
 sub get_navigation_lab {
