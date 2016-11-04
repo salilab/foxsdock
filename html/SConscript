@@ -1,3 +1,4 @@
 Import('env')
 
 env.InstallHTML(['monomer.pdb', 'hliq.dat'])
+env.InstallHTML(['img/logo.png', 'img/logo2.gif', 'img/logo3.png'], 'img')

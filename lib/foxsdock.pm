@@ -88,12 +88,14 @@ sub get_project_menu {
 }
 
 sub get_header {
-  return "<div id='header1'>
+    my $self = shift;
+    my $htmlroot = $self->htmlroot;
+    return "<div id='header1'>
   <table> <tbody> <tr> <td halign='left'>
-  <table><tr><td><img src=\"//salilab.org/foxsdock/logo.png\" align = 'right' height = '80'></td>
-             <td><img src=\"//salilab.org/foxsdock/logo3.png\" align = 'left' height = '80'></td></tr>
+  <table><tr><td><img src=\"$htmlroot/img/logo.png\" align = 'right' height = '80'></td>
+             <td><img src=\"$htmlroot/img/logo3.png\" align = 'left' height = '80'></td></tr>
          <tr><td><h3>Macromolecular Docking with SAXS Profile</h3> </td></tr></table>
-      </td> <td halign='right'><img src=\"//salilab.org/foxsdock/logo2.gif\" height = '80'></td></tr>
+      </td> <td halign='right'><img src=\"$htmlroot/img/logo2.gif\" height = '80'></td></tr>
   </tbody>
   </table></div>\n";
 }
