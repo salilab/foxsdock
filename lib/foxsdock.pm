@@ -92,21 +92,21 @@ sub get_header {
     my $htmlroot = $self->htmlroot;
     return "<div id='header1'>
   <table> <tbody> <tr> <td halign='left'>
-  <table><tr><td><img src=\"$htmlroot/img/logo.png\" align = 'right' height = '80'></td>
-             <td><img src=\"$htmlroot/img/logo3.png\" align = 'left' height = '80'></td></tr>
+  <table><tr><td><img src=\"$htmlroot/img/logo.png\" alt=\"FoXS\" align = 'right' height = '80' /></td>
+             <td><img src=\"$htmlroot/img/logo3.png\" alt=\"Dock\" align = 'left' height = '80' /></td></tr>
          <tr><td><h3>Macromolecular Docking with SAXS Profile</h3> </td></tr></table>
-      </td> <td halign='right'><img src=\"$htmlroot/img/logo2.gif\" height = '80'></td></tr>
+      </td> <td halign='right'><img src=\"$htmlroot/img/logo2.gif\" alt=\"SAXS profile\" height = '80' /></td></tr>
   </tbody>
   </table></div>\n";
 }
 
 sub get_footer {
-  return "<hr size='2' width=\"80%\">
+  return "<hr size='2' width=\"80%\" />
 <table><tr><td halign='left'>If you use FoXSDock, please cite:</td></tr></table>
 <div id='address'> Schneidman-Duhovny D, Hammel M, Sali A. Macromolecular docking restrained by a small angle X-ray scattering profile.
-J Struct Biol. 2010 [<a href=\"http://dx.doi.org/10.1016/j.jsb.2010.09.023\"> Abstract </a>] <br>
-Schneidman-Duhovny D, Hammel M, Tainer JA, and Sali A. FoXS, FoXSDock and MultiFoXS: Single-state and multi-state structural modeling of proteins and their complexes based on SAXS profiles. NAR 2016 [ <a href = \"//doi.org/10.1093/nar/gkw389\"> FREE Full Text </a> ] <br>
-    <p> <p>Contact: <script>escramble(\"dina\",\"salilab.org\")</script><br></div>\n";
+J Struct Biol. 2010 [<a href=\"http://dx.doi.org/10.1016/j.jsb.2010.09.023\"> Abstract </a>] <br />
+Schneidman-Duhovny D, Hammel M, Tainer JA, and Sali A. FoXS, FoXSDock and MultiFoXS: Single-state and multi-state structural modeling of proteins and their complexes based on SAXS profiles. NAR 2016 [ <a href = \"//doi.org/10.1093/nar/gkw389\"> FREE Full Text </a> ] <br />
+    <p> </p>Contact: <script type=\"text/javascript\">escramble(\"dina\",\"salilab.org\")</script><br /></div>\n";
 }
 
 sub get_input_form {
@@ -141,7 +141,7 @@ sub get_input_form {
 
 
         $q->Tr($q->td({ -align=>'left'}, [$q->a({-href => $self->help_url}, $q->b('Complex type'))]),
-           $q->td({ -align=>'left'}, ['<SELECT name=moltype> <OPTION>Enzyme-inhibitor <OPTION>Antibody-antigen <OPTION SELECTED>Default </SELECT>']),
+           $q->td({ -align=>'left'}, ['<select name="moltype"> <option>Enzyme-inhibitor</option> <option>Antibody-antigen</option> <option selected="selected">Default</option></select>']),
            $q->td({ -align=>'left'}, ['Please specify receptor and ligand in the corresponding order!'])) .
 
         $q->Tr($q->td({ -align=>'left', -colspan => 2}, [$q->submit(-value => 'Submit') . $q->reset(-value => 'Clear')])) .
@@ -149,7 +149,7 @@ sub get_input_form {
         $q->Tr($q->td({ -align=>'left', -colspan => 3}, [$q->b('Advanced Parameters')])) .
 
         $q->Tr($q->td({ -align=>'left'}, [$q->a({-href => $self->help_url}, $q->b('Weighted SAXS score'))]),
-               $q->td({ -align=>'left'}, ['<input type=checkbox name=weighted unchecked>']),
+               $q->td({ -align=>'left'}, ['<input type="checkbox" name="weighted"></input>']),
                $q->td({ -align=>'left'}, ['Weighted SAXS scoring that accounts for monomers contribution'])) .
 
         $q->Tr($q->td({ -align=>'left'}, [$q->a({-href => $self->help_url . "#dist"}, $q->b('Distance constraints'))]),
@@ -412,7 +412,7 @@ sub display_output_table {
   my $last = shift;
   my $return = "";
 
-  $return .= "<hr size=2 width=90%>";
+  $return .= "<hr size=2 width=90% />";
   $return .= print_table_header();
 
   open(DATA, "results_saxs.txt");
