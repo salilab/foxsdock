@@ -718,13 +718,6 @@ sub format_user_error {
   return $ret;
 }
 
-sub check_required_email {
-  my ($email) = @_;
-  if($email !~ m/^[\w\.-]+@[\w-]+\.[\w-]+((\.[\w-]+)*)?$/ ) {
-    throw saliweb::frontend::InputValidationError("Please provide a valid return email address");
-  }
-}
-
 sub removeSpecialChars {
   my $str = shift;
   $str =~ s/[^\w,^\d,^\.]//g;
