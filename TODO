@@ -1,3 +1,5 @@
+- Replace use of runIDockServer.pl with idock from IMP
+
 wait for Ben:
 1. get PDB by code from PDB database - check lowercase/uppercase tolerance in the pdb code
 2. get rid of the password for job access
