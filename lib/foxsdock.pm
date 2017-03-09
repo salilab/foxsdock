@@ -30,26 +30,14 @@ sub _display_web_page {
 sub get_help_page {
   my ($self, $display_type) = @_;
   my $file;
-  if ($display_type eq "contact") {
-    $self->set_page_title("Contact");
-    $file = "contact.txt";
-  } elsif ($display_type eq "news") {
-    $self->set_page_title("News");
-    $file = "news.txt";
-  } elsif ($display_type eq "about") {
+  if ($display_type eq "about") {
     $self->set_page_title("Method Description");
     $file = "about.txt";
-  } elsif ($display_type eq "FAQ") {
-    $self->set_page_title("FAQ");
-    $file = "FAQ.txt";
-  } elsif ($display_type eq "links") {
-    $self->set_page_title("links");
-    $file = "links.txt";
   } elsif ($display_type eq "download") {
     $self->set_page_title("download");
     $file = "download.txt";
   } else {
-    $file = "help.txt";
+    return $self->SUPER::get_help_page($display_type);
   }
   return $self->get_text_file($file);
 }
