@@ -11,7 +11,7 @@
 
 <p>
 
-<li><a href="http://salilab.org/imp/"> IMP </a> -
+<li><a href="https://integrativemodeling.org/"> IMP </a> -
 Integrative Modeling Platform for comprehensive structural
 characterization of biomolecules. FoXS code is found in applications/saxs.
 

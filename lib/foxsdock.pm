@@ -67,7 +67,7 @@ sub get_navigation_lab {
       &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=download\">Download</a>&nbsp;
       &bull;&nbsp; <a href=\"//salilab.org/foxs\">FoXS</a>&nbsp;
       &bull;&nbsp; <a href=\"//salilab.org\">Sali Lab</a>&nbsp;
-      &bull;&nbsp; <a href=\"//salilab.org/imp\">IMP</a>&nbsp;
+      &bull;&nbsp; <a href=\"//integrativemodeling.org\">IMP</a>&nbsp;
       &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=links\">Links</a>&nbsp;</div>\n";
 }
 

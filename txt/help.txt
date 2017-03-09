@@ -100,8 +100,8 @@ with index 5603 (from ligand).
 
 <ul>
 <li><b> Constructing a dimer of superoxide dismutase from the monomer (PDB 1hl5) </b> <br>
-<a href="http://modbase.compbio.ucsf.edu/foxsdock/html/monomer.pdb"> Input monomer PDB </a> - upload the same file as a receptor and as a ligand <br>
-<a href="http://modbase.compbio.ucsf.edu/foxsdock/html/hliq.dat"> SAXS profile of the dimer </a> - data from BIOISIS entry <a href="http://bioisis.net/experiments/69"> APSODP </a> <br>
+<a href="https://modbase.compbio.ucsf.edu/foxsdock/html/monomer.pdb"> Input monomer PDB </a> - upload the same file as a receptor and as a ligand <br>
+<a href="https://modbase.compbio.ucsf.edu/foxsdock/html/hliq.dat"> SAXS profile of the dimer </a> - data from BIOISIS entry <a href="http://bioisis.net/experiments/69"> APSODP </a> <br>
 <a href="https://modbase.compbio.ucsf.edu/foxsdock/results.cgi/4_36_17_29_11_115?passwd=4ewveSxvkJ"> FoXSDock output </a> - the dimer model that is close to native (C&alpha; RMSD 1.75A) is ranked 4th.
 
 </ul>
