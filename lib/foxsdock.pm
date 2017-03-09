@@ -48,7 +48,7 @@ sub new {
 
 sub get_navigation_lab {
   return "<div id=\"navigation_lab\">
-      &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=about\">About FOXSDock</a>&nbsp;
+      &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=about\">About FoXSDock</a>&nbsp;
       &bull;&nbsp; <a href=\"//salilab.org/foxsdock\">Web Server</a>&nbsp;
       &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=help\">Help</a>&nbsp;
       &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=download\">Download</a>&nbsp;

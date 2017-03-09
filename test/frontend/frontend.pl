@@ -32,10 +32,41 @@ my $t = new saliweb::Test('foxsdock');
     # wrong directory to find it
 }
 
+# Test get_navigation_lab
+{
+    my $self = $t->make_frontend();
+    my $txt = $self->get_navigation_lab();
+    like($txt, qr#<div.*About FoXSDock.*Sali Lab.*</div>#ms,
+         'Navigation');
+}
+
+# Test get_project_menu
+{
+    my $self = $t->make_frontend();
+    my $txt = $self->get_project_menu();
+    is($txt, "", 'Project menu');
+}
+
+# Test get_header
+{
+    my $self = $t->make_frontend();
+    my $txt = $self->get_header();
+    like($txt, qr#<div.*Docking with SAXS.*</div>#ms,
+         'Header');
+}
+
 # Test get_footer
 {
     my $self = $t->make_frontend();
     my $txt = $self->get_footer();
     like($txt, qr#If you use FoXSDock.*<div.*Tainer.*</div>#ms,
          'Footer');
+}
+
+# Test get_index_page
+{
+    my $self = $t->make_frontend();
+    my $txt = $self->get_index_page();
+    like($txt, qr/Weighted SAXS scoring/ms,
+         'get_index_page');
 }
