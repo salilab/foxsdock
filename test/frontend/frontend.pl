@@ -20,3 +20,11 @@ my $t = new saliweb::Test('foxsdock');
          qr#<a href="http://modbase/top/queue.cgi">FoXSDock Current queue</a>#,
          'Queue link');
 }
+
+# Test get_footer
+{
+    my $self = $t->make_frontend();
+    my $txt = $self->get_footer();
+    like($txt, qr#If you use FoXSDock.*<div.*Tainer.*</div>#ms,
+         'Footer');
+}
