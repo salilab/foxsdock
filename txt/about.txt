@@ -38,7 +38,7 @@ The docking protocol involves five steps (Fig. 1):
 
 <table align="center"><tr><td align="center">
 
-<img SRC="foxsdock_flow.jpg" HSPACE=100 ALT="Method Overview" width=30%>
+<img src="html/img/foxsdock_flow.jpg" HSPACE=100 ALT="Method Overview" width=30%>
 
 
 </td></tr></table>
