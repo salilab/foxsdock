@@ -81,7 +81,7 @@ For example:<br>
 <br>
 this file requires that two distance constraints will be satisfied in
 all the docking solutions: atom with index 25 (from receptor) should
-be within 5&Aring. from atom with index 377 (from ligand) and atom with
+be within 5&Aring; from atom with index 377 (from ligand) and atom with
 index 340 (from receptor) should be at the distance 5-10&Aring; from atom
 with index 5603 (from ligand).
 
