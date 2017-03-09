@@ -41,7 +41,8 @@ where 2&theta; is the scattering angle and &lambda; is the wavelength of the inc
 If your experimental profile does not contain an error column, the server will add 5% error with Poisson distribution.<br>
 
 Note, lines with zero intensities are skipped. If you profile contains negative intensity values,
-FoXS will read in the profile until it encounters first negative intensity value. <br>
+FoXS will read in the profile until it encounters the first negative
+intensity value. <br>
 
 <li><b><font color=blue>e-mail address:</font></b> the link with the
 results of your request is sent to this address. Using this link you
@@ -59,14 +60,14 @@ the antibody should be specified as 'receptor molecule').
 
 <li><b><font color=blue>Weighted SAXS score:</font></b> if checked,
  the server will attempt to account for contributions from the receptor 
-and ligand monomers in addition to complex in the SAXS scoring. This option
+and ligand monomers in addition to the complex in the SAXS scoring. This option
 is useful for cases when the solution profile is a mixture of the two proteins and their complex.
 
 <a name="dist"></a>
 <li><b><font color=blue>Distance constraints:</font></b> The user can
 specify distance constraints between pairs of atoms, one in the
-receptor ad one in the ligand. The distance constraints have to be
-given to the server in the text file with the following format:<br>
+receptor and one in the ligand. The distance constraints have to be
+given to the server in a text file with the following format:<br>
 [receptor_atom_index] [ligand_atom_index] [min_dist] [max_dist] <br>
 ...<br>
 receptor_atom_index and ligand_atom_index are atom indices as
@@ -80,8 +81,8 @@ For example:<br>
 <br>
 this file requires that two distance constraints will be satisfied in
 all the docking solutions: atom with index 25 (from receptor) should
-be within 5A from atom with index 377 (from ligand) and atom with
-index 340 (from receptor) should be at the distance 5-10A from atom
+be within 5&Aring. from atom with index 377 (from ligand) and atom with
+index 340 (from receptor) should be at the distance 5-10&Aring; from atom
 with index 5603 (from ligand).
 
 </ul>
@@ -101,7 +102,7 @@ with index 5603 (from ligand).
 <li><b> Constructing a dimer of superoxide dismutase from the monomer (PDB 1hl5) </b> <br>
 <a href="http://modbase.compbio.ucsf.edu/foxsdock/html/monomer.pdb"> Input monomer PDB </a> - upload the same file as a receptor and as a ligand <br>
 <a href="http://modbase.compbio.ucsf.edu/foxsdock/html/hliq.dat"> SAXS profile of the dimer </a> - data from BIOISIS entry <a href="http://bioisis.net/experiments/69"> APSODP </a> <br>
-<a href="https://modbase.compbio.ucsf.edu/foxsdock/results.cgi/4_36_17_29_11_115?passwd=4ewveSxvkJ"> FoXSDock output </a> - the dimer model that is close to native (Ca RMSD 1.75A) is ranked 4th.
+<a href="https://modbase.compbio.ucsf.edu/foxsdock/results.cgi/4_36_17_29_11_115?passwd=4ewveSxvkJ"> FoXSDock output </a> - the dimer model that is close to native (C&alpha; RMSD 1.75A) is ranked 4th.
 
 </ul>
 </table>
@@ -114,12 +115,12 @@ with index 5603 (from ligand).
 <table>
 <tr><td align ="left">
 
-The ouput of FoXSDock is a list of complex models for user
+The output of FoXSDock is a list of complex models for user
 specified receptor and ligand molecule. The list is presented to the
-user in the format of a table, each table line represents one
+user in the format of a table; each table line represents one
 complex model.
 
-If you didn't receive any output models, this probably means that non of the docking generated models fits the data well.
+If you didn't receive any output models, this probably means that none of the docking-generated models fits the data well.
 
 <p><b><font color="#000099">Table Format:</font></b><p>
 <ul>
