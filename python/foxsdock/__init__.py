@@ -11,9 +11,8 @@ class Job(saliweb.backend.Job):
 
         script = """
 module load sali-libraries
-export IDock=/netapp/sali/dina/IDock/bin/
-perl $IDock/runIDockServer.pl %s >& foxsdock.log
-""" % (input_line)
+perl %s/runIDockServer.pl %s >& foxsdock.log
+""" % (self.config.script_directory, input_line)
 
         r = self.runnercls(script)
         r.set_sge_options('-l arch=linux-x64,h_rt=300:00:00,mem_free=4G -p 0')
@@ -23,8 +22,15 @@ perl $IDock/runIDockServer.pl %s >& foxsdock.log
     def complete(self):
         os.chmod(".", 0775)
 
+class Config(saliweb.backend.Config):
+    def populate(self, config):
+        saliweb.backend.Config.populate(self, config)
+        # Read our service-specific configuration
+        self.script_directory = config.get('foxsdock', 'script_directory')
+
+
 def get_web_service(config_file):
     db = saliweb.backend.Database(Job)
-    config = saliweb.backend.Config(config_file)
+    config = Config(config_file)
     return saliweb.backend.WebService(config, db)
 

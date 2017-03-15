@@ -10,6 +10,7 @@ class JobTests(saliweb.test.TestCase):
     def test_run_ok(self):
         """Test successful run method"""
         j = self.make_test_job(foxsdock.Job, 'RUNNING')
+        j.config.script_directory = 'foo'
         d = saliweb.test.RunInDir(j.directory)
         open('input.txt', 'w').write('input line1\ninput line2\n')
         cls = j.run()

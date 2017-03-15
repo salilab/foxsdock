@@ -1,0 +1,7 @@
+Import('env')
+
+files = Glob("*.pl") + Glob("*.linux")
+
+i = env.Install(env['config'].script_directory, files)
+env.Alias('install', i)
+env.Default(i)
