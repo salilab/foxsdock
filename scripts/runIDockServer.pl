@@ -26,8 +26,6 @@ if($#ARGV < 2) {
 
 # software directories, please update to your path!
 my $home = "$FindBin::Bin";
-my $pd_home = "/netapp/sali/dina/PatchDock/";
-my $imp_home = "/netapp/sali/dina/imp_server_build2/";
 
 
 my $receptor = $ARGV[0];
@@ -102,12 +100,12 @@ if(length $saxs_file == 0 and length $map_file == 0 and length $class_average_li
 my $cmd;
 # generate PatchDock parameter file
 if($precision == 1) {
-  $cmd = "$pd_home/buildParams.pl $receptor $ligand 4.0 $type";
+  $cmd = "buildParams.pl $receptor $ligand 4.0 $type";
 } else {
   if($precision == 2) {
-    $cmd = "$pd_home/buildParams.pl $receptor $ligand 2.0 $type";
+    $cmd = "buildParams.pl $receptor $ligand 2.0 $type";
   } else {
-    $cmd = "$pd_home/buildParamsFine.pl $receptor $ligand 2.0 $type";
+    $cmd = "buildParamsFine.pl $receptor $ligand 2.0 $type";
   }
 }
 print "$cmd\n";
@@ -119,7 +117,7 @@ if(-e "distance_constraints.txt") {
 
 # run PatchDock
 my $patch_dock_out_file = $prefix . "docking.res";
-$cmd = "$pd_home/patch_dock.Linux params.txt $patch_dock_out_file";
+$cmd = "patch_dock.Linux params.txt $patch_dock_out_file";
 if(-e "$patch_dock_out_file") {  # recovery
   my $count1 = int `wc -l < $patch_dock_out_file`;
   if($count1 > 36) {
@@ -159,7 +157,7 @@ my $nmr_rtc_out_file = '';
 if(length $receptor_rtc > 0 or length $ligand_rtc > 0) {
   if($type eq "AA") { $receptor_rtc=$ligand_rtc; $ligand_rtc = "-"; } # TODO: check that length $receptor_rtc > 0
   $nmr_rtc_out_file = $prefix."nmr_rtc_score.res";
-  $cmd = "$imp_home/bin/nmr_rtc_score $receptor $ligand trans_pd $receptor_rtc $ligand_rtc -o $nmr_rtc_out_file";
+  $cmd = "nmr_rtc_score $receptor $ligand trans_pd $receptor_rtc $ligand_rtc -o $nmr_rtc_out_file";
   print "$cmd\n";
   if(-e $nmr_rtc_out_file) {  # recovery
     my $count1 = int `wc -l < trans_pd`;
@@ -182,9 +180,9 @@ if(length $saxs_file > 0) {
   my $saxs_ligand = $ligand;
   if(length $saxs_receptor_pdb > 0) { $saxs_receptor = $saxs_receptor_pdb; }
   if(length $saxs_ligand_pdb > 0) { $saxs_ligand = $saxs_ligand_pdb; }
-  #$cmd = "$imp_home/bin/saxs_score $receptor $ligand trans_pd $saxs_file -f -o $saxs_out_file"; # use offset
-  #$cmd = "$imp_home/bin/saxs_score $saxs_receptor $saxs_ligand trans_pd $saxs_file -o $saxs_out_file";
-  $cmd = "$imp_home/bin/saxs_score $saxs_receptor $saxs_ligand trans_pd $saxs_file -o $saxs_out_file --no_filtering_by_rg -a";
+  #$cmd = "saxs_score $receptor $ligand trans_pd $saxs_file -f -o $saxs_out_file"; # use offset
+  #$cmd = "saxs_score $saxs_receptor $saxs_ligand trans_pd $saxs_file -o $saxs_out_file";
+  $cmd = "saxs_score $saxs_receptor $saxs_ligand trans_pd $saxs_file -o $saxs_out_file --no_filtering_by_rg -a";
   if($weighted_saxs_score) { $cmd .= " -t"; }
   print "$cmd\n";
   if(-e $saxs_out_file) {  # recovery
@@ -204,7 +202,7 @@ if(length $saxs_file > 0) {
 my $em2d_out_file = '';
 if(length $class_average_list > 0) {
   $em2d_out_file = $prefix."em2d_score.res";
-  $cmd = "$imp_home/bin/em2d_score $receptor $ligand trans_pd $class_average_list -o $em2d_out_file -n 200 -s $pixel_size"; 
+  $cmd = "em2d_score $receptor $ligand trans_pd $class_average_list -o $em2d_out_file -n 200 -s $pixel_size"; 
   print "$cmd\n";
   if(-e $em2d_out_file) {  # recovery
     my $count1 = int `wc -l < trans_pd`;
@@ -223,7 +221,7 @@ if(length $class_average_list > 0) {
 my $em3d_out_file = '';
 if(length $map_file > 0) {
   $em3d_out_file = $prefix."em3d_score.res";
-  $cmd = "$imp_home/bin/em3d_score $receptor $ligand trans_pd $map_file -o $em3d_out_file -s";
+  $cmd = "em3d_score $receptor $ligand trans_pd $map_file -o $em3d_out_file -s";
   print "$cmd\n";
   if(-e $em3d_out_file) {  # recovery
     my $count1 = int `wc -l < trans_pd`;
@@ -242,14 +240,14 @@ if(length $map_file > 0) {
 my $cxms_out_file = '';
 if(length $cross_links_file > 0) {
   $cxms_out_file = $prefix."cxms_score.res";
-  $cmd = "$imp_home/bin/cross_links_score $receptor $ligand trans_pd $cross_links_file -o $cxms_out_file";
+  $cmd = "cross_links_score $receptor $ligand trans_pd $cross_links_file -o $cxms_out_file";
   print "$cmd\n";
   `$cmd`;
 }
 
 # SOAP
 my $soap_out_file = $prefix."soap_score.res";
-$cmd = "$imp_home/setup_environment.sh $imp_home/bin/soap_score $receptor $ligand trans_pd -o $soap_out_file";
+$cmd = "soap_score $receptor $ligand trans_pd -o $soap_out_file";
 print "$cmd\n";
 `$cmd`;
 
@@ -270,7 +268,7 @@ if(length $cxms_out_file > 0) { $data_count++; $data_types .= "_cxms"; $cxms_wei
 
 # combine score
 my $combined_out_file = "combined".$data_types.".res";
-$cmd = "$imp_home/bin/combine_scores $nmr_rtc_out_file $nmr_weight $saxs_out_file $saxs_weight $em3d_out_file $em3d_weight $em2d_out_file $em2d_weight $cxms_out_file $cxms_weight $soap_out_file 1.0 > $combined_out_file";
+$cmd = "combine_scores $nmr_rtc_out_file $nmr_weight $saxs_out_file $saxs_weight $em3d_out_file $em3d_weight $em2d_out_file $em2d_weight $cxms_out_file $cxms_weight $soap_out_file 1.0 > $combined_out_file";
 print "$cmd\n";
 `$cmd`;
 my $trans_field = $data_count*2 + 5;
@@ -279,7 +277,7 @@ my $trans_field = $data_count*2 + 5;
 
 # STEP 2C: cluster
 my $clustered_out_file = "clustered".$data_types.".res";
-$cmd = "$pd_home/interface_cluster.linux $receptor $ligand trans_for_cluster 4.0 $clustered_out_file";
+$cmd = "interface_cluster.linux $receptor $ligand trans_for_cluster 4.0 $clustered_out_file";
 print "$cmd\n";
 `$cmd`;
 
@@ -301,7 +299,7 @@ if(length $receptor_rtc > 0 or length $ligand_rtc > 0) {
   $cmd = "$home/extract_scores.pl $nmr_rtc_out_file $trans_file > tmp";
   print "$cmd\n";
   `$cmd`;
-  $cmd = "$imp_home/bin/recompute_zscore tmp > $nmr_rtc_out_file2";
+  $cmd = "recompute_zscore tmp > $nmr_rtc_out_file2";
   print "$cmd\n";
   `$cmd`;
   $header_line .= "NMR-RTC | Zscore |";
@@ -313,7 +311,7 @@ if(length $saxs_file > 0) {
   $cmd = "$home/extract_scores.pl $saxs_out_file $trans_file > tmp";
   print "$cmd\n";
   `$cmd`;
-  $cmd = "$imp_home/bin/recompute_zscore tmp > $saxs_out_file2";
+  $cmd = "recompute_zscore tmp > $saxs_out_file2";
   print "$cmd\n";
   `$cmd`;
   $header_line .= "  SAXS  | Zscore |";
@@ -325,7 +323,7 @@ if(length $class_average_list > 0) {
   $cmd = "$home/extract_scores.pl $em2d_out_file $trans_file > tmp";
   print "$cmd\n";
   `$cmd`;
-  $cmd = "$imp_home/bin/recompute_zscore tmp > $em2d_out_file2";
+  $cmd = "recompute_zscore tmp > $em2d_out_file2";
   print "$cmd\n";
   `$cmd`;
   $header_line .= "  EM2D  | Zscore |";
@@ -337,7 +335,7 @@ if(length $map_file > 0) {
   $cmd = "$home/extract_scores.pl $em3d_out_file $trans_file > tmp";
   print "$cmd\n";
   `$cmd`;
-  $cmd = "$imp_home/bin/recompute_zscore tmp 1 > $em3d_out_file2";
+  $cmd = "recompute_zscore tmp 1 > $em3d_out_file2";
   print "$cmd\n";
   `$cmd`;
   $header_line .= "  EM3D  | Zscore |";
@@ -349,7 +347,7 @@ if(length $cross_links_file > 0) {
   $cmd = "$home/extract_scores.pl $cxms_out_file $trans_file > tmp";
   print "$cmd\n";
   `$cmd`;
-  $cmd = "$imp_home/bin/recompute_zscore tmp 1 > $cxms_out_file2";
+  $cmd = "recompute_zscore tmp 1 > $cxms_out_file2";
   print "$cmd\n";
   `$cmd`;
   $header_line .= "  CXMS  | Zscore |";
@@ -359,7 +357,7 @@ my $soap_out_file2 = $prefix."soap_scoref.res";
 $cmd = "$home/extract_scores.pl $soap_out_file $trans_file > tmp";
 print "$cmd\n";
 `$cmd`;
-$cmd = "$imp_home/bin/recompute_zscore tmp > $soap_out_file2";
+$cmd = "recompute_zscore tmp > $soap_out_file2";
 print "$cmd\n";
 `$cmd`;
 $header_line .= "  SOAP     | Zscore |";
@@ -367,7 +365,7 @@ $header_line .= "  SOAP     | Zscore |";
 
 
 # combine scores
-$cmd = "$imp_home/bin/combine_scores $nmr_rtc_out_file2 $nmr_weight $saxs_out_file2 $saxs_weight $em3d_out_file2 $em3d_weight $em2d_out_file2 $em2d_weight $cxms_out_file2 $cxms_weight $soap_out_file2 1.0 > combined_final.res";
+$cmd = "combine_scores $nmr_rtc_out_file2 $nmr_weight $saxs_out_file2 $saxs_weight $em3d_out_file2 $em3d_weight $em2d_out_file2 $em2d_weight $cxms_out_file2 $cxms_weight $soap_out_file2 1.0 > combined_final.res";
 print "$cmd\n";
 `$cmd`;
 

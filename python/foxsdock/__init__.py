@@ -10,7 +10,7 @@ class Job(saliweb.backend.Job):
         input_line = par.readline().strip()
 
         script = """
-module load sali-libraries
+module load patch_dock imp
 perl %s/runIDockServer.pl %s >& foxsdock.log
 """ % (self.config.script_directory, input_line)
 
