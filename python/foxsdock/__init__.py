@@ -1,6 +1,8 @@
 import saliweb.backend
 import os, sys, stat
 
+class LogError(Exception): pass
+
 class Job(saliweb.backend.Job):
     runnercls = saliweb.backend.SGERunner
 
@@ -18,6 +20,17 @@ perl %s/runIDockServer.pl %s >& foxsdock.log
         r.set_sge_options('-l arch=linux-x64,h_rt=300:00:00,mem_free=4G -p 0')
         #r.set_sge_options('-l arch=linux-x64,mem_free=4G -p 0')
         return r
+
+    def postprocess(self):
+        self.check_log_file()
+
+    def check_log_file(self):
+        """Check log file for common errors."""
+        with open('foxsdock.log') as fh:
+            for line in fh:
+                if 'No such file' in line or "Can't find" in line:
+                    raise LogError("Job reported an error in foxsdock.log: %s"
+                                   % line)
 
     def complete(self):
         os.chmod(".", 0775)
