@@ -379,7 +379,7 @@ $header_line .= " Transformation\"";
 `rm -f tmp`;
 
 # validation - rmsd
-my $trans_field = $data_count*2 + 5;
+$trans_field = $data_count*2 + 5;
 `sort -nk3 combined_final.res | grep -v Score | cut -d '|' -f1,$trans_field --output-delimiter=' ' > trans_for_rmsd`;
 $cmd = "$home/rmsd3.linux $receptor $receptor $ligand $ligand trans_for_rmsd";
 print "$cmd\n";
