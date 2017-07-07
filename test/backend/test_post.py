@@ -11,6 +11,8 @@ class Tests(saliweb.test.TestCase):
         d = saliweb.test.RunInDir(j.directory)
         with open('foxsdock.log', 'w') as fh:
             fh.write("everything ok\n")
+            # We ignore errors from rmsd3 when no transformations were found
+            fh.write("Input Error: Can't find atom with atom index 0!\n")
         j.postprocess()
 
     def test_postprocess_bad_log(self):

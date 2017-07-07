@@ -28,7 +28,8 @@ perl %s/runIDockServer.pl %s >& foxsdock.log
         """Check log file for common errors."""
         with open('foxsdock.log') as fh:
             for line in fh:
-                if 'No such file' in line or "Can't find" in line:
+                if 'No such file' in line or "Can't find" in line \
+                   and "Can't find atom with atom index 0" not in line:
                     raise LogError("Job reported an error in foxsdock.log: %s"
                                    % line)
 
