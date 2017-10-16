@@ -24,13 +24,20 @@ perl %s/runIDockServer.pl %s >& foxsdock.log
         self.check_log_file()
 
     def check_log_file(self):
-        """Check log file for common errors."""
+        """Check log file for common internal errors."""
+        error = None
         with open('foxsdock.log') as fh:
             for line in fh:
-                if 'No such file' in line or "Can't find" in line \
-                   and "Can't find atom with atom index 0" not in line:
-                    raise LogError("Job reported an error in foxsdock.log: %s"
-                                   % line)
+                # This is usually caused by user error, so report it to them
+                if 'PatchDock found no docking solutions' in line:
+                    return
+                if error is None and \
+                   ('No such file' in line or "Can't find" in line
+                    and "Can't find atom with atom index 0" not in line):
+                    error = LogError("Job reported an error in foxsdock.log: %s"
+                                     % line)
+        if error:
+            raise error
 
     def complete(self):
         os.chmod(".", 0775)
