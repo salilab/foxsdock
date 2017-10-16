@@ -18,7 +18,6 @@ perl %s/runIDockServer.pl %s >& foxsdock.log
 
         r = self.runnercls(script)
         r.set_sge_options('-l arch=linux-x64,h_rt=300:00:00,mem_free=4G -p 0')
-        #r.set_sge_options('-l arch=linux-x64,mem_free=4G -p 0')
         return r
 
     def postprocess(self):
