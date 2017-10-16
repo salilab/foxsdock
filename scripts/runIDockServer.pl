@@ -139,6 +139,12 @@ if($precision == 1) {
 print "$cmd\n";
 `$cmd`;
 
+if ( ! -s "trans_pd") {
+  print "ERROR: PatchDock found no docking solutions.\n";
+  print "See patch_dock.log for more information.\n";
+  exit;
+}
+
 # swap in case of AA
 if($type eq "AA") {
   my $tmp = $receptor;
