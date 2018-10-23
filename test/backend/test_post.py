@@ -15,6 +15,17 @@ class Tests(saliweb.test.TestCase):
             fh.write("Input Error: Can't find atom with atom index 0!\n")
         j.postprocess()
 
+    def test_postprocess_no_light_heavy_chain(self):
+        """Test postprocess with no light or heavy chain found"""
+        j = self.make_test_job(foxsdock.Job, 'RUNNING')
+        d = saliweb.test.RunInDir(j.directory)
+        with open('foxsdock.log', 'w') as fh:
+            fh.write("everything ok\n")
+            fh.write("Can't find heavy chain\n")
+            fh.write("Can't find light chain\n")
+        # Error should be ignored here (reported back to the user)
+        j.postprocess()
+
     def test_postprocess_no_trans(self):
         """Test postprocess with no transformations found"""
         j = self.make_test_job(foxsdock.Job, 'RUNNING')

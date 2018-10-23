@@ -33,6 +33,8 @@ perl %s/runIDockServer.pl %s >& foxsdock.log
                     return
                 if error is None and \
                    ('No such file' in line or "Can't find" in line
+                    and "Can't find light chain" not in line
+                    and "Can't find heavy chain" not in line
                     and "Can't find atom with atom index 0" not in line):
                     error = LogError("Job reported an error in foxsdock.log: %s"
                                      % line)
