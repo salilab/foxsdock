@@ -4,7 +4,7 @@ import os, sys, stat
 class LogError(Exception): pass
 
 class Job(saliweb.backend.Job):
-    runnercls = saliweb.backend.SGERunner
+    runnercls = saliweb.backend.WyntonSGERunner
 
     def run(self):
         os.chmod(".", 0775)
@@ -12,12 +12,13 @@ class Job(saliweb.backend.Job):
         input_line = par.readline().strip()
 
         script = """
+module load Sali
 module load patch_dock imp
 perl %s/runIDockServer.pl %s >& foxsdock.log
 """ % (self.config.script_directory, input_line)
 
         r = self.runnercls(script)
-        r.set_sge_options('-l arch=linux-x64,h_rt=300:00:00,mem_free=4G -p 0')
+        r.set_sge_options('-l arch=lx-amd64,h_rt=300:00:00,mem_free=4G -p 0')
         return r
 
     def postprocess(self):
