@@ -27,35 +27,27 @@ sub _display_web_page {
   print $suffix;
 }
 
-sub get_help_page {
-  my ($self, $display_type) = @_;
-  my $file;
-  if ($display_type eq "about") {
-    $self->set_page_title("Method Description");
-    $file = "about.txt";
-  } elsif ($display_type eq "download") {
-    $self->set_page_title("download");
-    $file = "download.txt";
-  } else {
-    return $self->SUPER::get_help_page($display_type);
-  }
-  return $self->get_text_file($file);
-}
-
 sub new {
   return saliweb::frontend::new(@_, "##CONFIG##");
 }
 
 sub get_navigation_lab {
+  my $self = shift;
   return "<div id=\"navigation_lab\">
-      &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=about\">About FoXSDock</a>&nbsp;
-      &bull;&nbsp; <a href=\"//salilab.org/foxsdock\">Web Server</a>&nbsp;
-      &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=help\">Help</a>&nbsp;
-      &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=download\">Download</a>&nbsp;
+      &bull;&nbsp; <a href=\"" . $self->about_url . "\">About FoXSDock</a>&nbsp;
+      &bull;&nbsp; <a href=\"" . $self->index_url . "\">Web Server</a>&nbsp;
+      &bull;&nbsp; <a href=\"" . $self->help_url . "\">Help</a>&nbsp;
+      &bull;&nbsp; <a href=\"" . $self->download_url . "\">Download</a>&nbsp;
       &bull;&nbsp; <a href=\"//salilab.org/foxs\">FoXS</a>&nbsp;
       &bull;&nbsp; <a href=\"//salilab.org\">Sali Lab</a>&nbsp;
       &bull;&nbsp; <a href=\"//integrativemodeling.org\">IMP</a>&nbsp;
-      &bull;&nbsp; <a href=\"//modbase.compbio.ucsf.edu/foxsdock//help.cgi?type=links\">Links</a>&nbsp;</div>\n";
+      &bull;&nbsp; <a href=\"" . $self->links_url .
+      "\">Links</a>&nbsp;</div>\n";
+}
+
+sub get_download_page {
+  my ($self) = @_;
+  return "<div id=\"fullpart\">".$self->get_text_file("download.txt")."</div>";
 }
 
 sub get_navigation_links {
