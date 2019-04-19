@@ -465,20 +465,6 @@ sub print_input_data() {
   return $return;
 }
 
-sub format_user_error {
-  my ($self, $exc) = @_;
-  my $q = $self->{'CGI'};
-  my $msg = $exc->text;
-  my $ret = $q->p("&nbsp;") .
-    $q->p($q->b("An error occurred during your request:")) .
-      "<div class=\"standout\"><p>$msg</p></div>";
-  if ($exc->isa('saliweb::frontend::InputValidationError')) {
-    $ret .= $q->p($q->b("Please click on your browser's \"BACK\" " .
-                        "button, and correct the problem."));
-  }
-  return $ret;
-}
-
 sub removeSpecialChars {
   my $str = shift;
   $str =~ s/[^\w,^\d,^\.]//g;
