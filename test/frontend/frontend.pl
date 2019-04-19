@@ -14,10 +14,10 @@ my $t = new saliweb::Test('foxsdock');
     my $self = $t->make_frontend();
     my $links = $self->get_navigation_links();
     isa_ok($links, 'ARRAY', 'navigation links');
-    like($links->[0], qr#<a href="http://modbase/top/">FoXSDock Home</a>#,
+    like($links->[0], qr#<a href="http://modbase/top/">Web Server</a>#,
          'Index link');
-    like($links->[1],
-         qr#<a href="http://modbase/top/queue.cgi">FoXSDock Current queue</a>#,
+    like($links->[2],
+         qr#<a href="http://modbase/top/queue.cgi">Queue</a>#,
          'Queue link');
 }
 
@@ -30,14 +30,6 @@ my $t = new saliweb::Test('foxsdock');
     $txt = $self->get_help_page("contact");
     # Can't assert that the content is OK, because we're probably in the
     # wrong directory to find it
-}
-
-# Test get_navigation_lab
-{
-    my $self = $t->make_frontend();
-    my $txt = $self->get_navigation_lab();
-    like($txt, qr#<div.*About FoXSDock.*Sali Lab.*</div>#ms,
-         'Navigation');
 }
 
 # Test get_project_menu

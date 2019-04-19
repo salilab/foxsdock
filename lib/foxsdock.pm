@@ -8,41 +8,21 @@ use File::Copy;
 
 our @ISA = "saliweb::frontend";
 
-
-sub _display_content {
-  my ($self, $content) = @_;
-  print $content;
-}
-
-sub _display_web_page {
-  my ($self, $content) = @_;
-  # Call all prefix and suffix methods before printing anything, in case one
-  # of them raises an error
-  my $prefix = $self->start_html() . "<div id='container'>" . $self->get_header();
-  my $suffix = $self->get_footer() . "</div>\n" . $self->end_html;
-  my $navigation = $self->get_navigation_lab();
-  print $prefix;
-  print $navigation;
-  $self->_display_content($content);
-  print $suffix;
-}
-
 sub new {
   return saliweb::frontend::new(@_, "##CONFIG##");
 }
 
-sub get_navigation_lab {
+sub get_navigation_links {
   my $self = shift;
-  return "<div id=\"navigation_lab\">
-      &bull;&nbsp; <a href=\"" . $self->about_url . "\">About FoXSDock</a>&nbsp;
-      &bull;&nbsp; <a href=\"" . $self->index_url . "\">Web Server</a>&nbsp;
-      &bull;&nbsp; <a href=\"" . $self->help_url . "\">Help</a>&nbsp;
-      &bull;&nbsp; <a href=\"" . $self->download_url . "\">Download</a>&nbsp;
-      &bull;&nbsp; <a href=\"//salilab.org/foxs\">FoXS</a>&nbsp;
-      &bull;&nbsp; <a href=\"//salilab.org\">Sali Lab</a>&nbsp;
-      &bull;&nbsp; <a href=\"//integrativemodeling.org\">IMP</a>&nbsp;
-      &bull;&nbsp; <a href=\"" . $self->links_url .
-      "\">Links</a>&nbsp;</div>\n";
+  my $q = $self->cgi;
+  return [
+      $q->a({-href=>$self->index_url}, "Web Server"),
+      $q->a({-href=>$self->about_url}, "About FoXSDock"),
+      $q->a({-href=>$self->queue_url}, "Queue"),
+      $q->a({-href=>$self->help_url}, "Help"),
+      $q->a({-href=>$self->download_url}, "Download"),
+      $q->a({-href=>$self->links_url}, "Links")
+      ];
 }
 
 sub get_download_page {
@@ -50,33 +30,21 @@ sub get_download_page {
   return "<div id=\"fullpart\">".$self->get_text_file("download.txt")."</div>";
 }
 
-sub get_navigation_links {
-  my $self = shift;
-  my $q = $self->cgi;
-  return [
-          $q->a({-href=>$self->index_url}, "FoXSDock Home"),
-          $q->a({-href=>$self->queue_url}, "FoXSDock Current queue"),
-          $q->a({-href=>$self->help_url}, "FoXSDock Help"),
-          $q->a({-href=>$self->contact_url}, "FoXSDock Contact")
-         ];
-}
-
 sub get_project_menu {
   # no menu
   return "";
 }
 
-sub get_header {
+sub get_header_page_title {
     my $self = shift;
     my $htmlroot = $self->htmlroot;
-    return "<div id='header1'>
-  <table> <tbody> <tr> <td halign='left'>
+    return "<table> <tbody> <tr> <td halign='left'>
   <table><tr><td><img src=\"$htmlroot/img/logo.png\" alt=\"FoXS\" align = 'right' height = '80' /></td>
              <td><img src=\"$htmlroot/img/logo3.png\" alt=\"Dock\" align = 'left' height = '80' /></td></tr>
          <tr><td><h3>Macromolecular Docking with SAXS Profile</h3> </td></tr></table>
       </td> <td halign='right'><img src=\"$htmlroot/img/logo2.gif\" alt=\"SAXS profile\" height = '80' /></td></tr>
   </tbody>
-  </table></div>\n";
+  </table>\n";
 }
 
 sub get_footer {
