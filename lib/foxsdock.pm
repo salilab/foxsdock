@@ -715,13 +715,6 @@ sub removeSpecialChars {
   return $str;
 }
 
-sub removeSpaces {
-  my $stringWithSpaces = shift;
-  my @letters = split(" ",$stringWithSpaces);
-  my $stringWithoutSpaces = join("", @letters);
-  return $stringWithoutSpaces;
-}
-
 sub trimExtension {
   my $str = shift;
   my $size = length $str;
