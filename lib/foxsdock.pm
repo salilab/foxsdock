@@ -465,6 +465,195 @@ sub print_input_data() {
   return $return;
 }
 
+sub generate_model_pdb {
+  my $self = shift;
+  my $q = $self->{'CGI'};
+  my $dbh = $self->{'dbh'};
+  my $job;
+  my $file;
+  if ($q->path_info =~ m#^/+([^/]+)/*$#) {
+    $job = $1;
+  } elsif ($q->path_info =~ m#^/+([^/]+)/+(.+)$#) {
+    $job = $1;
+    $file = $2;
+  }
+  my $passwd = $q->param('passwd');
+  $self->set_page_title("PDB Model");
+  if (!defined($job) || !defined($passwd)) {
+    throw saliweb::frontend::ResultsBadURLError("Missing job name and password");
+  }
+  my $query = $dbh->prepare("select * from jobs where name=? and passwd=?")
+    or throw saliweb::frontend::DatabaseError("Couldn't prepare query: " . $dbh->errstr);
+  $query->execute($job, $passwd)
+    or throw saliweb::frontend::DatabaseError("Couldn't execute query: " . $dbh->errstr);
+  my $job_row = $query->fetchrow_hashref();
+  if (!$job_row) {
+    throw saliweb::frontend::ResultsBadJobError("Job does not exist, or wrong password");
+  } elsif ($job_row->{state} eq 'EXPIRED'
+           || $job_row->{state} eq 'ARCHIVED') {
+    throw saliweb::frontend::ResultsGoneError("Results for job '$job' are no longer available");
+  } elsif ($job_row->{state} ne 'COMPLETED') {
+    throw saliweb::frontend::ResultsStillRunningError("Job '$job' has not yet completed; please check back later");
+  } else {
+    chdir($job_row->{directory});
+    my $return = '';
+    my $passwd = $q->param('passwd');
+    my $from = $q->param('from');
+    my $to = $q->param('to');
+    apply_trans("results_saxs.txt", $from, $to);
+    my $pdb_file = "docking_$from.pdb";
+    $return .= "Content-type: chemical/x-ras\n\n";
+    $return .= `cat $pdb_file`;
+    $self->_display_content($return);
+  }
+}
+
+sub apply_trans {
+  my $resFileName = shift;
+  my $first = shift;
+  my $last = shift;
+
+  my $ligandPdb = "";
+  my $receptorPdb = "";
+
+  open(DATA, $resFileName);
+  my $home = "$FindBin::Bin";
+  my $transNum = 0;
+  while(<DATA>) {
+    chomp;
+    my @tmp=split('\|',$_);
+    if($#tmp>0 and $tmp[0] =~/\d/) {
+      $transNum++;
+      if($transNum >= $first and $transNum <= $last and length $ligandPdb > 0 and length $receptorPdb > 0) {
+        # apply transformation on the ligand molecule
+        my $currResFile = "docking_$transNum.pdb";
+        unlink $currResFile;
+        `cat $receptorPdb > $currResFile`;
+        `$home/pdb_trans $tmp[$#tmp] < $ligandPdb >> $currResFile`;
+      }
+    } else {
+      # find the filenames in the output file
+      @tmp=split(' ',$_);
+      if($#tmp>0) {
+        if($tmp[0] =~ /ligandPdb/) {
+          $ligandPdb = $tmp[2];
+          #print "Ligand PDB: $ligandPdb\n";
+        }
+        if($tmp[0] =~ /receptorPdb/) {
+          $receptorPdb = $tmp[2];
+          #print "Receptor PDB: $receptorPdb\n";
+        }
+      }
+    }
+  }
+}
+
+sub generate_model_page {
+  my $self = shift;
+  my $q = $self->{'CGI'};
+  my $dbh = $self->{'dbh'};
+  my $job;
+  my $file;
+  if ($q->path_info =~ m#^/+([^/]+)/*$#) {
+    $job = $1;
+    } elsif ($q->path_info =~ m#^/+([^/]+)/+(.+)$#) {
+    $job = $1;
+    $file = $2;
+  }
+  my $passwd = $q->param('passwd');
+  $self->set_page_title("PDB Model");
+  if (!defined($job) || !defined($passwd)) {
+    throw saliweb::frontend::ResultsBadURLError("Missing job name and password");
+  }
+  my $query = $dbh->prepare("select * from jobs where name=? and passwd=?")
+    or throw saliweb::frontend::DatabaseError("Couldn't prepare query: " . $dbh->errstr);
+  $query->execute($job, $passwd)
+    or throw saliweb::frontend::DatabaseError("Couldn't execute query: " . $dbh->errstr);
+  my $job_row = $query->fetchrow_hashref();
+  if (!$job_row) {
+    throw saliweb::frontend::ResultsBadJobError("Job does not exist, or wrong password");
+  } elsif ($job_row->{state} eq 'EXPIRED'
+           || $job_row->{state} eq 'ARCHIVED') {
+    throw saliweb::frontend::ResultsGoneError("Results for job '$job' are no longer available");
+  } elsif ($job_row->{state} ne 'COMPLETED') {
+    throw saliweb::frontend::ResultsStillRunningError("Job '$job' has not yet completed; please check back later");
+  } else {
+    chdir($job_row->{directory});
+    my $jobobj = new saliweb::frontend::CompletedJob($self, $job_row);
+    my $return = '';
+    my $passwd = $q->param('passwd');
+    my $from = $q->param('from');
+    my $to = $q->param('to');
+    # generate pdb
+    my $pdb_file = "docking_$from.pdb";
+    if(! -e $pdb_file) {
+      apply_trans("results_saxs.txt", $from, $to);
+    }
+    # generate SAXS fit image
+    my $profile_filename = get_profile_filename();
+    run_FoXS($pdb_file, $profile_filename);
+    $return .= display_FoXS_output($jobobj, $pdb_file, $profile_filename);
+    $self->set_page_title("Model $from");
+    $self->_display_web_page($return);
+  }
+}
+
+sub run_FoXS() {
+  my $home = "$FindBin::Bin";
+  `$home/foxs -j -g @_ >& foxs.log`;
+  `/modbase5/home/foxs/www/foxs/gnuplot-4.6.0/src/gnuplot *.plt`;
+}
+
+sub display_FoXS_output() {
+  my $job = shift;
+  my $pdb = shift;
+  my $profile_filename = shift;
+  my $pdbCode = trimExtension($pdb);
+  my $return = '';
+
+  #title
+  $return .= "<table><tr>";
+  $return .= "<td><font color=blue><b> $pdbCode Fit to experimental profile </b></td></tr>\n";
+
+  # profile images
+  my $profileFile = trimExtension($profile_filename);
+  my $fit_png = "$pdbCode"."_".$profileFile.".png";
+  if(-e $fit_png) {
+    $return .= "<tr><td><img src=\"" . $job->get_results_file_url($fit_png) . "\" height=350></td>\n";
+  } else {
+    $return .= "Profile fit not generated";
+  }
+  $return .= "</tr><tr>\n";
+
+  # link to fit file
+  my $outputFile2 = "$pdbCode"."_"."$profileFile".".dat";
+  $return .= "<td> <a href= \"" . $job->get_results_file_url($outputFile2) . "\">Experimental profile fit file</a></td>\n";
+  $return .= "</tr><tr>\n";
+
+  # print fit data
+  $return .= "<td>";
+  my $line = `grep $pdb foxs.log | grep Chi`;
+  my @tmp = split(' ', $line);
+  $return .= "\&chi;";
+  for(my $i =1; $i <9; $i++) {
+    $return .= "$tmp[$i+2] ";
+  }
+  $return .= "</td>\n";
+  $return .= "</tr></table>\n";
+
+  return $return;
+}
+
+sub get_profile_filename() {
+  my $filename = "input.txt";
+  open FILE, "<$filename" or die "Can't open file: $filename";
+  my @dataFile = <FILE>;
+  my $dataLine = $dataFile[0];
+  chomp($dataLine);
+  my @data = split(' ',$dataLine);
+  return $data[3];
+}
+
 sub removeSpecialChars {
   my $str = shift;
   $str =~ s/[^\w,^\d,^\.]//g;
