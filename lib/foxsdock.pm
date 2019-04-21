@@ -334,7 +334,6 @@ sub get_results_page {
 
   my $return = '';
   my $jobname = $job->name;
-  my $joburl = $job->results_url;
   my $passwd = $q->param('passwd');
   my $from = $q->param('from');
   my $to = $q->param('to');
@@ -342,7 +341,7 @@ sub get_results_page {
 
   $return .= print_input_data($job);
   if(-f 'results_saxs.txt') {
-    $return .= display_output_table($joburl, $from, $to);
+    $return .= display_output_table($job, $from, $to);
     $return .= $q->p("<a href=\"" . $job->get_results_file_url('results_saxs.txt') . "\">Download output file</a>.");
   } else {
     $return .= $q->p("No output file was produced. Please inspect the log files to determine the problem.");
@@ -356,7 +355,7 @@ sub get_results_page {
 
 sub display_output_table {
   #my ($self, $job) = @_;
-  my $joburl = shift;
+  my $job = shift;
   my $first = shift;
   my $last = shift;
   my $return = "";
@@ -392,13 +391,12 @@ sub display_output_table {
                                 <td>$energy_score </td>
                                 <td align=left> $roundedTrans</td>";
         # generate PDB link
-        my $pdb_joburl = $joburl;
-        $pdb_joburl =~ s/results/model/;
-        my $pdb_url = $pdb_joburl . "&from=$transNum&to=$transNum";
+        my $pdb_url = $job->get_results_file_url("result$transNum.pdb");
         $return .= "<td> <a href=\"" . $pdb_url . "\"> result$transNum.pdb </a></td>";
         # generate link to model page
-        my $model_url = $pdb_url;
-        $model_url =~ s/model/model2/;
+        my $model_joburl = $job->results_url;
+        $model_joburl =~ s/results/model2/;
+        my $model_url = $model_joburl . "&from=$transNum&to=$transNum";
         $return .= "<td> <a href=\"" . $model_url . "\"> view </a></td>";
         $return .= "</tr>";
       }
@@ -410,14 +408,14 @@ sub display_output_table {
  if($first > 20) {
     my $prev_from = $first - 20;
     my $prev_to = $last - 20;
-    my $prev_page_url = $joburl . "&from=$prev_from&to=$prev_to";
+    my $prev_page_url = $job->results_url . "&from=$prev_from&to=$prev_to";
     $return .= "<a href=\"" . $prev_page_url . "\">&laquo;&laquo; show prev 20 </a>";
   }
   $return .= "</td><td></td><td></td><td></td><td></td><td>";
   if($last < $transNum) {
     my $next_from = $first + 20;
     my $next_to = $last + 20;
-    my $next_page_url = $joburl . "&from=$next_from&to=$next_to";
+    my $next_page_url = $job->results_url . "&from=$next_from&to=$next_to";
     $return .= "<a href=\"" . $next_page_url . "\">&raquo;&raquo; show next 20 </a>";
   }
   $return .= "</td></tr></table>";
@@ -465,47 +463,22 @@ sub print_input_data() {
   return $return;
 }
 
-sub generate_model_pdb {
-  my $self = shift;
-  my $q = $self->{'CGI'};
-  my $dbh = $self->{'dbh'};
-  my $job;
-  my $file;
-  if ($q->path_info =~ m#^/+([^/]+)/*$#) {
-    $job = $1;
-  } elsif ($q->path_info =~ m#^/+([^/]+)/+(.+)$#) {
-    $job = $1;
-    $file = $2;
-  }
-  my $passwd = $q->param('passwd');
-  $self->set_page_title("PDB Model");
-  if (!defined($job) || !defined($passwd)) {
-    throw saliweb::frontend::ResultsBadURLError("Missing job name and password");
-  }
-  my $query = $dbh->prepare("select * from jobs where name=? and passwd=?")
-    or throw saliweb::frontend::DatabaseError("Couldn't prepare query: " . $dbh->errstr);
-  $query->execute($job, $passwd)
-    or throw saliweb::frontend::DatabaseError("Couldn't execute query: " . $dbh->errstr);
-  my $job_row = $query->fetchrow_hashref();
-  if (!$job_row) {
-    throw saliweb::frontend::ResultsBadJobError("Job does not exist, or wrong password");
-  } elsif ($job_row->{state} eq 'EXPIRED'
-           || $job_row->{state} eq 'ARCHIVED') {
-    throw saliweb::frontend::ResultsGoneError("Results for job '$job' are no longer available");
-  } elsif ($job_row->{state} ne 'COMPLETED') {
-    throw saliweb::frontend::ResultsStillRunningError("Job '$job' has not yet completed; please check back later");
+sub download_results_file {
+  my ($self, $job, $file) = @_;
+  if ($file =~ /result(\d+)\.pdb/) {
+    $self->generate_model_pdb($1);
   } else {
-    chdir($job_row->{directory});
-    my $return = '';
-    my $passwd = $q->param('passwd');
-    my $from = $q->param('from');
-    my $to = $q->param('to');
-    apply_trans("results_saxs.txt", $from, $to);
-    my $pdb_file = "docking_$from.pdb";
-    $return .= "Content-type: chemical/x-ras\n\n";
-    $return .= `cat $pdb_file`;
-    $self->_display_content($return);
+    return $self->SUPER::download_results_file($job, $file);
   }
+}
+
+sub generate_model_pdb {
+  my ($self, $model_num) = @_;
+  apply_trans("results_saxs.txt", $model_num, $model_num);
+  my $pdb_file = "docking_$model_num.pdb";
+  print "Content-type: chemical/x-ras\n\n";
+  my $return .= `cat $pdb_file`;
+  print $return;
 }
 
 sub apply_trans {
