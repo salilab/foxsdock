@@ -1,3 +1,0 @@
-Import('env')
-
-env.InstallCGI(['model2.cgi'])

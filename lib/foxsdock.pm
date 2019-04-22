@@ -334,6 +334,9 @@ sub get_results_page {
 
   my $return = '';
   my $jobname = $job->name;
+  if (defined $q->param('fit')) {
+    return $self->get_model_fit_page($job, $q->param('fit'));
+  }
   my $passwd = $q->param('passwd');
   my $from = $q->param('from');
   my $to = $q->param('to');
@@ -393,10 +396,8 @@ sub display_output_table {
         # generate PDB link
         my $pdb_url = $job->get_results_file_url("result$transNum.pdb");
         $return .= "<td> <a href=\"" . $pdb_url . "\"> result$transNum.pdb </a></td>";
-        # generate link to model page
-        my $model_joburl = $job->results_url;
-        $model_joburl =~ s/results/model2/;
-        my $model_url = $model_joburl . "&from=$transNum&to=$transNum";
+        # generate fit link
+        my $model_url = $job->results_url . "&fit=$transNum";
         $return .= "<td> <a href=\"" . $model_url . "\"> view </a></td>";
         $return .= "</tr>";
       }
@@ -521,54 +522,19 @@ sub apply_trans {
   }
 }
 
-sub generate_model_page {
-  my $self = shift;
-  my $q = $self->{'CGI'};
-  my $dbh = $self->{'dbh'};
-  my $job;
-  my $file;
-  if ($q->path_info =~ m#^/+([^/]+)/*$#) {
-    $job = $1;
-    } elsif ($q->path_info =~ m#^/+([^/]+)/+(.+)$#) {
-    $job = $1;
-    $file = $2;
+sub get_model_fit_page {
+  my ($self, $jobobj, $from) = @_;
+  # generate pdb
+  my $pdb_file = "docking_$from.pdb";
+  if(! -e $pdb_file) {
+    apply_trans("results_saxs.txt", $from, $from);
   }
-  my $passwd = $q->param('passwd');
-  $self->set_page_title("PDB Model");
-  if (!defined($job) || !defined($passwd)) {
-    throw saliweb::frontend::ResultsBadURLError("Missing job name and password");
-  }
-  my $query = $dbh->prepare("select * from jobs where name=? and passwd=?")
-    or throw saliweb::frontend::DatabaseError("Couldn't prepare query: " . $dbh->errstr);
-  $query->execute($job, $passwd)
-    or throw saliweb::frontend::DatabaseError("Couldn't execute query: " . $dbh->errstr);
-  my $job_row = $query->fetchrow_hashref();
-  if (!$job_row) {
-    throw saliweb::frontend::ResultsBadJobError("Job does not exist, or wrong password");
-  } elsif ($job_row->{state} eq 'EXPIRED'
-           || $job_row->{state} eq 'ARCHIVED') {
-    throw saliweb::frontend::ResultsGoneError("Results for job '$job' are no longer available");
-  } elsif ($job_row->{state} ne 'COMPLETED') {
-    throw saliweb::frontend::ResultsStillRunningError("Job '$job' has not yet completed; please check back later");
-  } else {
-    chdir($job_row->{directory});
-    my $jobobj = new saliweb::frontend::CompletedJob($self, $job_row);
-    my $return = '';
-    my $passwd = $q->param('passwd');
-    my $from = $q->param('from');
-    my $to = $q->param('to');
-    # generate pdb
-    my $pdb_file = "docking_$from.pdb";
-    if(! -e $pdb_file) {
-      apply_trans("results_saxs.txt", $from, $to);
-    }
-    # generate SAXS fit image
-    my $profile_filename = get_profile_filename();
-    run_FoXS($pdb_file, $profile_filename);
-    $return .= display_FoXS_output($jobobj, $pdb_file, $profile_filename);
-    $self->set_page_title("Model $from");
-    $self->_display_web_page($return);
-  }
+  # generate SAXS fit image
+  my $profile_filename = get_profile_filename();
+  run_FoXS($pdb_file, $profile_filename);
+  my $return = display_FoXS_output($jobobj, $pdb_file, $profile_filename);
+  $self->set_page_title("Model $from");
+  return $return;
 }
 
 sub run_FoXS() {
