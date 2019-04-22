@@ -540,7 +540,7 @@ sub get_model_fit_page {
 sub run_FoXS() {
   my $home = "$FindBin::Bin";
   `$home/foxs -j -g @_ >& foxs.log`;
-  `/modbase5/home/foxs/www/foxs/gnuplot-4.6.0/src/gnuplot *.plt`;
+  `/salilab/diva1/programs/x86_64linux/gnuplot-5.0.5/bin/gnuplot *.plt`;
 }
 
 sub display_FoXS_output() {
