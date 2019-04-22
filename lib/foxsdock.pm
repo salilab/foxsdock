@@ -543,10 +543,8 @@ sub run_FoXS() {
   `/salilab/diva1/programs/x86_64linux/gnuplot-5.0.5/bin/gnuplot *.plt`;
 }
 
-sub display_FoXS_output() {
-  my $job = shift;
-  my $pdb = shift;
-  my $profile_filename = shift;
+sub display_FoXS_output {
+  my ($job, $pdb, $profile_filename) = @_;
   my $pdbCode = trimExtension($pdb);
   my $return = '';
 
