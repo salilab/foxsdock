@@ -85,7 +85,7 @@ sub get_input_form {
            $q->td({ -align=>'left'}, [$q->filefield({-name=>'saxsfile', -size => 10})])) .
 
         $q->Tr($q->td({ -align=>'left'}, [$q->a({-href => $self->help_url}, $q->b('e-mail address'))]),
-           $q->td({ -align=>'left'}, [$q->textfield({-name => 'email'})]),
+           $q->td({ -align=>'left'}, [$q->textfield({-name => 'email', -value=>$self->email})]),
            $q->td({ -align=>'left'}, ['(the results are sent to this address, optional)'])) .
 
 
