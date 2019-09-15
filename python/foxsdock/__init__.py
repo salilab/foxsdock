@@ -7,7 +7,7 @@ class Job(saliweb.backend.Job):
     runnercls = saliweb.backend.WyntonSGERunner
 
     def run(self):
-        os.chmod(".", 0775)
+        os.chmod(".", 0o775)
         par = open('input.txt', 'r')
         input_line = par.readline().strip()
 
@@ -43,7 +43,7 @@ perl %s/runIDockServer.pl %s >& foxsdock.log
             raise error
 
     def complete(self):
-        os.chmod(".", 0775)
+        os.chmod(".", 0o775)
 
 class Config(saliweb.backend.Config):
     def populate(self, config):
