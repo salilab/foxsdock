@@ -3,51 +3,44 @@ import saliweb.frontend
 from saliweb.frontend import InputValidationError
 from werkzeug.utils import secure_filename
 import os
-import re
 
 
 def handle_new_job():
+    profile = request.form.get('saxsfile')
     email = request.form.get('email')
-
-    jobname = request.form.get('jobname')
-    modelsnumber = request.form.get('modelsnumber', type=int)
-    units = request.form.get('units')
+    moltype = request.form.get('moltype')
+    weighted_score = request.form.get('weighted')
 
     # Validate input
+    moltype = {'Enzyme-inhibitor': 'EI',
+               'Antibody-antigen': 'AA',
+               'Default': 'Default'}.get(moltype)
+    if not moltype:
+        raise InputValidationError("Error in the types of molecules")
     saliweb.frontend.check_email(email, required=False)
-    if modelsnumber is None or modelsnumber <= 0 or modelsnumber > 10000:
-        raise InputValidationError(
-                "Invalid value for number of models. "
-                "Must be > 0 and <= 10000")
-    if units not in ("unknown", "angstroms", "nanometers"):
-        raise InputValidationError("Invalid units: %s" % units)
 
-    job = saliweb.frontend.IncomingJob(jobname)
-    pdb_file_name = handle_pdb(request.form.get('pdbcode'),
-                               request.files.get("pdbfile"), job)
+    job = saliweb.frontend.IncomingJob()
+    receptor = handle_pdb(request.form.get("receptor"),
+                          request.files.get("recfile"), "receptor", job)
+    ligand = handle_pdb(request.form.get("ligand"),
+                          request.files.get("ligfile"), "ligand", job)
 
     saxsfile = handle_uploaded_file(
-            request.files.get("saxsfile"), job, "iq.dat", "SAXS profile file")
-    hingefile = handle_uploaded_file(
-            request.files.get("hingefile"), job, "hinges.dat",
-            "flexible residues file")
-
-    real_connect = "connectrbs.dat"
-    connectrbsfile = handle_uploaded_file(
-            request.files.get("connectrbsfile"), job, real_connect,
-            "rigid bodies connect file", allow_missing=True)
+            request.files.get("saxsfile"), job, "SAXS profile file")
+    distfile = handle_uploaded_file(
+            request.files.get("distfile"), job, "distance constraints file",
+            force_name="distance_constraints.txt")
 
     # write parameters
     with open(job.get_path('input.txt'), 'w') as fh:
-        fh.write("%s hinges.dat iq.dat %s %s %s\n"
-                 % (pdb_file_name,
-                    real_connect if os.path.exists(job.get_path(real_connect))
-                                 else "-",
-                    modelsnumber, units))
+        fh.write("%s %s --saxs %s --complex_type %s"
+                 % (receptor, ligand, saxsfile, moltype))
+        if weighted_score:
+            fh.write(" --weighted_saxs_score")
+        fh.write("\n")
     with open(job.get_path('data.txt'), 'w') as fh:
-        fh.write("%s %s %s %s %s %s %d\n"
-                 % (pdb_file_name, hingefile, saxsfile, email, jobname,
-                    connectrbsfile, modelsnumber))
+        fh.write("%s %s --saxs %s --complex_type %s %s"
+                 % (receptor, ligand, saxsfile, moltype, email))
 
     job.submit(email)
 
@@ -56,42 +49,35 @@ def handle_new_job():
                                                    job=job)
 
 
-def has_atoms(fname):
-    """Return True iff fname has at least one ATOM record"""
-    with open(fname) as fh:
-        for line in fh:
-            if line.startswith('ATOM  '):
-                return True
-
-
-def handle_pdb(pdb_code, pdb_file, job):
+def handle_pdb(pdb_code, pdb_file, pdb_type, job):
     """Handle input PDB code or file. Return file name."""
     if pdb_file:
-        fname = 'input.pdb'
+        fname = secure_filename(pdb_file.filename)
+        # Cannot call input files docking.res.X.pdb (reserved for output files)
+        fname = fname.replace('docking.res.', 'dockingres.')
         full_fname = job.get_path(fname)
         pdb_file.save(full_fname)
-        if not has_atoms(full_fname):
-            raise InputValidationError("PDB file contains no ATOM records!")
+        if os.stat(full_fname).st_size == 0:
+            raise InputValidationError("You have uploaded an empty %s PDB file"
+                                       % pdb_type)
         return fname
     elif pdb_code:
         fname = saliweb.frontend.get_pdb_chains(pdb_code, job.directory)
         return [os.path.basename(fname)]
     else:
         raise InputValidationError("Error in protein input: please specify "
-                                   "PDB code or upload file")
+                                   "PDB code or upload file for %s" % pdb_type)
 
 
-def handle_uploaded_file(fh, job, output_file, description,
-                         allow_missing=False):
+def handle_uploaded_file(fh, job, description, force_name=None):
     """Save an uploaded file into the job directory.
-       Return the user-specified filename (sanitized)."""
+       Return the filename (sanitized) or "-" if not specified."""
     if not fh:
-        if not allow_missing:
-            raise InputValidationError("Please upload valid %s" % description)
-        return
-    full_fname = job.get_path(output_file)
+        return "-"
+    fname = force_name or secure_filename(fh.filename)
+    full_fname = job.get_path(fname)
     fh.save(full_fname)
     if os.stat(full_fname).st_size == 0:
         raise InputValidationError("You have uploaded an empty %s"
                                    % description)
-    return secure_filename(os.path.basename(fh.filename))
+    return fname
