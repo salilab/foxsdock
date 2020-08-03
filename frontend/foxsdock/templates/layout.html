@@ -5,11 +5,11 @@
 {%- endblock %}
 
 {% block header_page_title %}
-<table> <tbody> <tr> <td halign='left'>
+<table> <tbody> <tr> <td align='left'>
   <table><tr><td><img src="{{ url_for("static", filename="img/logo.png") }}" alt="FoXS" align='right' height='80' /></td>
   <td><img src="{{ url_for("static", filename="img/logo3.png") }}" alt="Dock" align='left' height='80' /></td></tr>
   <tr><td><h3>Macromolecular Docking with SAXS Profile</h3> </td></tr></table>
-  </td> <td halign='right'><img src="{{ url_for("static", filename="img/logo2.gif") }}" alt="SAXS profile" height='80' /></td></tr>
+  </td> <td align='right'><img src="{{ url_for("static", filename="img/logo2.gif") }}" alt="SAXS profile" height='80' /></td></tr>
   </tbody>
 </table>
 {% endblock %}
@@ -27,8 +27,9 @@
 
 {% block footer %}
 <hr size='2' width="80%" />
-<table><tr><td halign='left'>If you use FoXSDock (version <a href="{{ config.GITHUB }}">{{ config.VERSION }}</a>), please cite:</td></tr></table>
-<div id='address'> Schneidman-Duhovny D, Hammel M, Sali A. Macromolecular docking restrained by a small angle X-ray scattering profile.
+<div id='address'>
+<p>If you use FoXSDock (version <a href="{{ config.GITHUB }}">{{ config.VERSION }}</a>), please cite:</p>
+Schneidman-Duhovny D, Hammel M, Sali A. Macromolecular docking restrained by a small angle X-ray scattering profile.
 J Struct Biol. 2010 [<a href="http://dx.doi.org/10.1016/j.jsb.2010.09.023"> Abstract </a>] <br />
 Schneidman-Duhovny D, Hammel M, Tainer JA, and Sali A. FoXS, FoXSDock and MultiFoXS: Single-state and multi-state structural modeling of proteins and their complexes based on SAXS profiles. NAR 2016 [ <a href = "//doi.org/10.1093/nar/gkw389"> FREE Full Text </a> ] <br />
     <p> </p>Contact: <script type="text/javascript">escramble("dina","salilab.org")</script><br /></div>
