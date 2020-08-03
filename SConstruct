@@ -17,7 +17,7 @@ env.InstallCGIScripts()
 
 Export('env')
 SConscript('backend/foxsdock/SConscript')
-SConscript('lib/SConscript')
+SConscript('frontend/foxsdock/SConscript')
 SConscript('html/SConscript')
 SConscript('txt/SConscript')
 SConscript('test/SConscript')

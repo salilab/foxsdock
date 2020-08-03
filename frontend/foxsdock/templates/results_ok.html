@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}FoXSDock Results{% endblock %}
+
+{% block body %}
+<table width="90%">
+  <tr>
+    <td><font color=blue>Receptor</td>
+    <td><font color=blue>Ligand</td>
+    <td><font color=blue>SAXS Profile</td>
+    <td><font color=blue>Complex Type</td>
+  </tr>
+  <tr>
+    <td><a href="{{ job.get_results_file_url(receptor) }}">{{ receptor }}</a></td>
+    <td><a href="{{ job.get_results_file_url(ligand) }}">{{ ligand }}</a></td>
+    <td><a href="{{ job.get_results_file_url(profile) }}">{{ profile }}</a></td>
+    <td>{{ complex_type }}</td>
+  </tr>
+</table>
+<hr size='2' width='90%' />
+
+<table cellspacing="0" cellpadding="0" width="90%" align="center">
+  <tr>
+    <td><span class="fieldname"><b>Model No</b></span></td>
+    <td><span class="fieldname"><b>Z-Score</b></span></td>
+    <td><span class="fieldname"><b>SAXS &chi; score</b></span></td>
+    <td><span class="fieldname"><b>Energy score</b></span></td>
+    <td><span class="fieldname"><b>Transformation</b></span></td>
+    <td><span class="fieldname"><b>PDB file of the complex</b></span></td>
+  </tr>
+
+{%- for transform in transforms %}
+  <tr class="{{ loop.cycle('odd', 'even') }}">
+    <td>{{ transform.number }}</td>
+    <td>{{ transform.zscore }}</td>
+    <td>{{ transform.saxs_score }}</td>
+    <td>{{ transform.energy_score }}</td>
+    <td>{{ transform.transform }}</td>
+    <td><a href="{{ job.get_results_file_url(transform.pdb) }}">{{ transform.pdb }}</a></td>
+    <td><a href="{{ job.get_results_file_url(transform.fit) }}"> view </a></td>
+  </tr>
+{%- endfor %}
+
+  <tr>
+    <td>
+      {%- if show_from > 20 %}
+      <a href="{{ url_for("results", name=job.name, passwd=job.passwd, from=show_from-20, to=show_to-20) }}"> &laquo;&laquo; show prev 20</a>
+      {%- endif %}
+    </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+
+    <td>
+      {%- if show_to < num_transforms %}
+      <a href="{{ url_for("results", name=job.name, passwd=job.passwd, from=show_from+20, to=show_to+20) }}"> &raquo;&raquo; show next 20</a>
+      {%- endif %}
+    </td>
+    <td></td>
+  </tr>
+</table>
+
+<p><a href="{{ job.get_results_file_url("results_saxs.txt") }}">Download output file</a>.</p>
+{% endblock %}

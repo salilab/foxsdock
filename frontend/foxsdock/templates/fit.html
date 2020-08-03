@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}FoXSDock Model {{ number }}{% endblock %}
+
+{% block body %}
+
+<table><tr>
+<td><font color=blue><b> {{pdb_code}} Fit to experimental profile </b></td></tr>
+
+{% if fitpng %}
+<tr><td><img src="{{ job.get_results_file_url(fitpng) }}" height="350" /></td>
+{% else %}
+Profile fit not generated
+{% endif %}
+</tr><tr>
+
+<td> <a href="{{ job.get_results_file_url(fitdat) }}">Experimental profile fit file</a></td>
+</tr><tr>
+
+<td>&chi;<sup>2</sup> = {{ chi }} c1 = {{ c1 }} c2 = {{ c2 }}</td>
+</tr></table>
+
+{% endblock %}

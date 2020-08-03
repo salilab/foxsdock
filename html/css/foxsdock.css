@@ -1,0 +1,11 @@
+span.fieldname {
+  color: blue
+}
+
+tr.odd {
+  background: #efefef;
+}
+
+tr.even {
+  background: #cccccc;
+}

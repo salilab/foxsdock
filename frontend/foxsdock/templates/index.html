@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}Multi-state modeling with SAXS profiles{% endblock %}
+
+{% block body %}
+<form method="post" action="{{ url_for("job") }}"
+ enctype="multipart/form-data" name="multifoxsform">
+	
+  <table cellpadding="5" cellspacing="0">
+    <tr>
+      <td>Type PDB code for protein or upload file in PDB format  <a href="{{ url_for("help", _anchor="sampleinput") }}">sample input files</a></td>
+    </tr>
+  </table>
+  <table border="0" cellpadding="5" cellspacing="0" width="99%">
+    <tr>
+      <td align="left"><a href="{{ url_for("help", _anchor="protein") }}"><b>Input protein</b></a></td> <td align="left"><input type="text" name="pdbcode"  size="10" maxlength="10" /> (PDB:chainId e.g. 2kai:AB)</td> <td align="left"><b>or</b> upload file: <input type="file" name="pdbfile"  size="10" /></td>
+    </tr>
+    <tr><td align="left"><a href="{{ url_for("help", _anchor="flexres") }}"><b>Flexible residues</b></a></td> <td align="left"><input type="file" name="hingefile"  size="10" /></td>
+    </tr>
+    <tr><td align="left"><a href="{{ url_for("help", _anchor="profile") }}"><b>SAXS profile</b></a></td> <td align="left"><input type="file" name="saxsfile"  size="10" /></td>
+    </tr>
+    <tr><td align="left"><a href="{{ url_for("help", _anchor="email") }}"><b>e-mail address</b></a></td> <td align="left"><input type="text" name="email" value="{{ g.user.email }}" /></td> <td align="left">(the results are sent to this address, optional)</td>
+    </tr>
+    <tr><td align="left" colspan="2"><input type="submit" name=".submit" value="Submit" /><input type="reset"  name=".reset" value="Clear" /></td>
+    </tr>
+    <tr><td align="left" colspan="3"><b>Advanced Parameters</b></td>
+    </tr>
+    <tr><td align="left"><a href="{{ url_for("help", _anchor="jobname") }}">Job name</a></td> <td align="left"><input type="text" name="jobname"  size="10" maxlength="10" /></td>
+    </tr>
+    <tr><td align="left"><a href="{{ url_for("help", _anchor="conectrbs") }}">Connect rigid bodies</a></td> <td align="left"><input type="file" name="connectrbsfile"  size="10" /></td>
+    </tr>
+    <tr><td align="left"><a href="{{ url_for("help", _anchor="confnumber") }}">Number of conformations</a></td> <td align="left"><input type="text" name="modelsnumber" value="100" size="5" maxlength="5" /></td> <td align="left">Use 100 to test your setup, 10,000 for final calculation</td>
+    </tr>
+    <tr><td align="left"><a href="{{ url_for("help", _anchor="units") }}">Experimental profile units</a></td> <td align="left"><select name="units" >
+<option selected="selected" value="unknown">Unknown - determine automatically (default)</option>
+<option value="angstroms">q values are in 1/&Aring;</option>
+<option value="nanometers">q values are in nm</option>
+</select></td>
+    </tr>
+    <tr><td align="left" colspan="2"><input type="submit" name=".submit" value="Submit" /><input type="reset"  name=".reset" value="Clear" /></td>
+    </tr>
+  </table>
+</form>
+{% endblock %}

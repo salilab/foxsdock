@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block title %}FoXSDock Results{% endblock %}
+
+{% block body %}
+<p>No output file was produced. Please inspect the log files to determine
+the problem.</p>
+
+<p><a href="{{ job.get_results_file_url("foxsdock.log") }}">View FoXSDock log file</a>.</p>
+{% endblock %}
