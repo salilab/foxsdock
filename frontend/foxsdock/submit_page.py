@@ -39,7 +39,7 @@ def handle_new_job():
             fh.write(" --weighted_saxs_score")
         fh.write("\n")
     with open(job.get_path('data.txt'), 'w') as fh:
-        fh.write("%s %s --saxs %s --complex_type %s %s"
+        fh.write("%s %s --saxs %s --complex_type %s %s\n"
                  % (receptor, ligand, saxsfile, moltype, email))
 
     job.submit(email)
@@ -52,7 +52,7 @@ def handle_new_job():
 def handle_pdb(pdb_code, pdb_file, pdb_type, job):
     """Handle input PDB code or file. Return file name."""
     if pdb_file:
-        fname = secure_filename(pdb_file.filename)
+        fname = secure_filename(os.path.basename(pdb_file.filename))
         # Cannot call input files docking.res.X.pdb (reserved for output files)
         fname = fname.replace('docking.res.', 'dockingres.')
         full_fname = job.get_path(fname)

@@ -12,33 +12,33 @@ class Tests(saliweb.test.TestCase):
         """Test index page"""
         c = foxsdock.app.test_client()
         rv = c.get('/')
-        self.assertIn(b'Experimental profile units', rv.data)
+        self.assertIn(b'Weighted SAXS scoring', rv.data)
 
     def test_about(self):
         """Test about page"""
         c = foxsdock.app.test_client()
         rv = c.get('/about')
-        self.assertIn(b'MultiFoXS is a method for multi-state modeling',
-                      rv.data)
+        self.assertIn(b'method for docking with SAXS', rv.data)
 
     def test_help(self):
         """Test help page"""
         c = foxsdock.app.test_client()
         rv = c.get('/help')
-        self.assertIn(b'list of residues that their backbone phi and psi',
+        self.assertIn(b'output of FoXSDock is a list of complex models',
                       rv.data)
 
     def test_download(self):
         """Test download page"""
         c = foxsdock.app.test_client()
         rv = c.get('/download')
-        self.assertIn(b'Computation of SAXS profiles', rv.data)
+        self.assertIn(b'FoXSDock web server is a simple frontend',
+                      rv.data)
 
     def test_links(self):
         """Test links page"""
         c = foxsdock.app.test_client()
         rv = c.get('/links')
-        self.assertIn(b'Please address inquiries to', rv.data)
+        self.assertIn(b'open access SAXS database', rv.data)
 
     def test_queue(self):
         """Test queue page"""
