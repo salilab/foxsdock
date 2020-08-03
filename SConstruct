@@ -13,12 +13,10 @@ env = saliweb.build.Environment(vars, ['conf/live.conf'],
 Help(vars.GenerateHelpText(env))
 
 env.InstallAdminTools()
-env.InstallCGIScripts()
 
 Export('env')
 SConscript('backend/foxsdock/SConscript')
 SConscript('frontend/foxsdock/SConscript')
 SConscript('html/SConscript')
-SConscript('txt/SConscript')
 SConscript('test/SConscript')
 SConscript('scripts/SConscript')
