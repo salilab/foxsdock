@@ -10,6 +10,7 @@ def handle_new_job():
     email = request.form.get('email')
     moltype = request.form.get('moltype')
     weighted_score = request.form.get('weighted')
+    jobname = request.form.get('jobname')
 
     # Validate input
     moltype = {'Enzyme-inhibitor': 'EI',
@@ -19,7 +20,7 @@ def handle_new_job():
         raise InputValidationError("Error in the types of molecules")
     saliweb.frontend.check_email(email, required=False)
 
-    job = saliweb.frontend.IncomingJob()
+    job = saliweb.frontend.IncomingJob(jobname)
     receptor = handle_pdb(request.form.get("receptor"),
                           request.files.get("recfile"), "receptor", job)
     ligand = handle_pdb(request.form.get("ligand"),
