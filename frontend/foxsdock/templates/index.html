@@ -19,8 +19,7 @@
 <tr><td align="left"><a href="{{ url_for("help") }}"><b>Complex type</b></a></td> <td align="left"><select name="moltype"> <option>Enzyme-inhibitor</option> <option>Antibody-antigen</option> <option selected="selected">Default</option></select></td> <td align="left">Please specify receptor and ligand in the corresponding order!</td></tr>
 <tr><td align="left" colspan="2"><input type="submit" name=".submit" value="Submit" /><input type="reset"  name=".reset" value="Clear" /></td></tr>
 <tr><td align="left" colspan="3"><b>Advanced Parameters</b></td></tr>
-    <tr><td align="left"><a href="{{ url_for("help", _anchor="jobname") }}">Job name</a></td> <td align="left"><input type="text" name="jobname"  size="10" maxlength="10" /></td>
-    </tr>
+<tr><td align="left"><a href="{{ url_for("help", _anchor="jobname") }}"><b>Job name</b></a></td> <td align="left"><input type="text" name="jobname"  size="10" maxlength="10" /></td></tr>
 <tr><td align="left"><a href="{{ url_for("help") }}"><b>Weighted SAXS score</b></a></td> <td align="left"><input type="checkbox" name="weighted"></input></td> <td align="left">Weighted SAXS scoring that accounts for monomers contribution</td></tr>
 <tr><td align="left"><a href="{{ url_for("help", _anchor="dist") }}"><b>Distance constraints</b></a></td> <td align="left"><input type="file" name="distfile"  size="10" /></td></tr>
 <tr><td align="left" colspan="2"><input type="submit" name=".submit" value="Submit" /><input type="reset"  name=".reset" value="Clear" /></td></tr>
