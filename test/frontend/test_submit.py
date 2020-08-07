@@ -35,26 +35,35 @@ class Tests(saliweb.test.TestCase):
             fh.write("0.00000    9656627.00000000 2027.89172363\n")
 
         # Successful submission (no email)
-        data['moltype'] = 'Default'
-        data['recfile'] = open(pdbf, 'rb')
-        data['ligfile'] = open(pdbf, 'rb')
+        data = {'moltype': 'Default', 'jobname': 'foobar',
+                'recfile': open(pdbf, 'rb'), 'ligfile': open(pdbf, 'rb')}
         rv = c.post('/job', data=data)
         self.assertEqual(rv.status_code, 200)
-        r = re.compile(b'Your job job has been submitted.*'
+        r = re.compile(b'Your job <b>foobar</b> has been submitted.*'
                        b'Results will be found at',
                        re.MULTILINE | re.DOTALL)
         self.assertRegex(rv.data, r)
 
         # Make sure data.txt and input.txt are generated
-        with open(os.path.join(incoming.tmpdir, 'job', 'data.txt')) as fh:
+        with open(os.path.join(incoming.tmpdir, 'foobar', 'data.txt')) as fh:
             contents = fh.read()
         self.assertEqual(contents,
                 "test.pdb test.pdb --saxs - --complex_type Default None\n")
-        with open(os.path.join(incoming.tmpdir, 'job', 'input.txt')) as fh:
+        with open(os.path.join(incoming.tmpdir, 'foobar', 'input.txt')) as fh:
             contents = fh.read()
         self.assertEqual(contents,
                 "test.pdb test.pdb --saxs - --complex_type Default\n")
 
+        # Successful submission (with email)
+        data = {'moltype': 'Default', 'email': 'test@example.com',
+                'recfile': open(pdbf, 'rb'), 'ligfile': open(pdbf, 'rb')}
+        rv = c.post('/job', data=data)
+        self.assertEqual(rv.status_code, 200)
+        r = re.compile(b'Your job <b>job\S*</b> has been submitted.*'
+                       b'Results will be found at.*'
+                       b'You will be notified at test@example.com when',
+                       re.MULTILINE | re.DOTALL)
+        self.assertRegex(rv.data, r)
 
 if __name__ == '__main__':
     unittest.main()
