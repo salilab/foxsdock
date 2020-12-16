@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/salilab/foxsdock.svg?branch=master)](https://travis-ci.com/salilab/foxsdock)
+[![Build Status](https://github.com/salilab/foxsdock/workflows/build/badge.svg?branch=master)](https://github.com/salilab/foxsdock/actions?query=workflow%3Abuild)
 [![codecov](https://codecov.io/gh/salilab/foxsdock/branch/master/graph/badge.svg)](https://codecov.io/gh/salilab/foxsdock)
 [![Code Climate](https://codeclimate.com/github/salilab/foxsdock/badges/gpa.svg)](https://codeclimate.com/github/salilab/foxsdock)
 
