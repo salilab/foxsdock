@@ -1,5 +1,5 @@
-[![Build Status](https://github.com/salilab/foxsdock/workflows/build/badge.svg?branch=master)](https://github.com/salilab/foxsdock/actions?query=workflow%3Abuild)
-[![codecov](https://codecov.io/gh/salilab/foxsdock/branch/master/graph/badge.svg)](https://codecov.io/gh/salilab/foxsdock)
+[![Build Status](https://github.com/salilab/foxsdock/workflows/build/badge.svg?branch=main)](https://github.com/salilab/foxsdock/actions?query=workflow%3Abuild)
+[![codecov](https://codecov.io/gh/salilab/foxsdock/branch/main/graph/badge.svg)](https://codecov.io/gh/salilab/foxsdock)
 [![Code Climate](https://codeclimate.com/github/salilab/foxsdock/badges/gpa.svg)](https://codeclimate.com/github/salilab/foxsdock)
 
 This is the source code for [FoXSDock](https://salilab.org/foxsdock/), a web
