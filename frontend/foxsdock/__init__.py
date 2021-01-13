@@ -1,6 +1,6 @@
-from flask import render_template, request, send_from_directory, abort
+from flask import render_template, request, send_from_directory
 import saliweb.frontend
-from saliweb.frontend import get_completed_job, Parameter, FileParameter
+from saliweb.frontend import get_completed_job
 import os
 import re
 from . import submit_page, results_page

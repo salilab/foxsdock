@@ -1,7 +1,6 @@
 import unittest
 import saliweb.test
 import re
-import os
 
 # Import the foxsdock frontend with mocks
 foxsdock = saliweb.test.import_mocked_frontend("foxsdock", __file__,
@@ -9,8 +8,9 @@ foxsdock = saliweb.test.import_mocked_frontend("foxsdock", __file__,
 
 
 def make_input_txt(j):
-    j.make_file('input.txt',
-            '5_new.pdb ICAM_Btype.pdb --saxs iq.dat --complex_type Default')
+    j.make_file(
+        'input.txt',
+        '5_new.pdb ICAM_Btype.pdb --saxs iq.dat --complex_type Default')
 
 
 class Tests(saliweb.test.TestCase):
@@ -29,13 +29,18 @@ class Tests(saliweb.test.TestCase):
         """Test display of OK job"""
         with saliweb.test.make_frontend_job('testjob2') as j:
             make_input_txt(j)
-            j.make_file("results_saxs.txt",
-"""receptorPdb Str 5_new.pdb
-ligandPdb Str ICAM_Btype.pdb
-     # |  Score  | filt| ZScore |  SAXS  | Zscore |  SOAP     | Zscore | Transformation
-     1 |  -3.559 |  +  | -2.503 |  2.147 | -1.055 | -1610.932 | -2.504 |  -1.636 -0.108 0.361 -40.146 -84.326 -72.529
-     2 |  -3.461 |  +  | -2.434 |  1.812 | -1.292 | -1429.678 | -2.169 |  -1.357 0.112 0.608 -29.160 -68.705 -80.858
-""")
+            j.make_file(
+                "results_saxs.txt",
+                "receptorPdb Str 5_new.pdb\n"
+                "ligandPdb Str ICAM_Btype.pdb\n"
+                "     # |  Score  | filt| ZScore |  SAXS  | Zscore "
+                "|  SOAP     | Zscore | Transformation\n"
+                "     1 |  -3.559 |  +  | -2.503 |  2.147 | -1.055 "
+                "| -1610.932 | -2.504 |  -1.636 -0.108 0.361 -40.146 "
+                "-84.326 -72.529\n"
+                "     2 |  -3.461 |  +  | -2.434 |  1.812 | -1.292 "
+                "| -1429.678 | -2.169 |  -1.357 0.112 0.608 -29.160 "
+                "-68.705 -80.858\n")
             c = foxsdock.app.test_client()
             rv = c.get('/job/testjob2?passwd=%s&from=1&to=20' % j.passwd)
             r = re.compile(
@@ -65,13 +70,18 @@ ligandPdb Str ICAM_Btype.pdb
             j.make_file("docking_2.pdb")
             j.make_file("foxs_2.log", """
 1abc.pdb saxs.dat Chi^2 = 28.2913 c1 = 1.05 c2 = 4 default chi^2 = 45.8281""")
-            j.make_file("results_saxs.txt",
-"""receptorPdb Str 5_new.pdb
-ligandPdb Str ICAM_Btype.pdb
-     # |  Score  | filt| ZScore |  SAXS  | Zscore |  SOAP     | Zscore | Transformation
-     1 |  -3.559 |  +  | -2.503 |  2.147 | -1.055 | -1610.932 | -2.504 |  -1.636 -0.108 0.361 -40.146 -84.326 -72.529
-     2 |  -3.461 |  +  | -2.434 |  1.812 | -1.292 | -1429.678 | -2.169 |  -1.357 0.112 0.608 -29.160 -68.705 -80.858
-""")
+            j.make_file(
+                "results_saxs.txt",
+                "receptorPdb Str 5_new.pdb\n"
+                "ligandPdb Str ICAM_Btype.pdb\n"
+                "     # |  Score  | filt| ZScore |  SAXS  | Zscore "
+                "|  SOAP     | Zscore | Transformation\n"
+                "     1 |  -3.559 |  +  | -2.503 |  2.147 | -1.055 "
+                "| -1610.932 | -2.504 |  -1.636 -0.108 0.361 -40.146 "
+                "-84.326 -72.529\n"
+                "     2 |  -3.461 |  +  | -2.434 |  1.812 | -1.292 "
+                "| -1429.678 | -2.169 |  -1.357 0.112 0.608 -29.160 "
+                "-68.705 -80.858\n")
             c = foxsdock.app.test_client()
             rv = c.get('/job/testjob4/fit2?passwd=%s' % j.passwd)
             r = re.compile(
@@ -90,13 +100,18 @@ ligandPdb Str ICAM_Btype.pdb
             j.make_file("docking_2_iq.png")
             j.make_file("foxs_2.log", """
 1abc.pdb saxs.dat Chi^2 = 28.2913 c1 = 1.05 c2 = 4 default chi^2 = 45.8281""")
-            j.make_file("results_saxs.txt",
-"""receptorPdb Str 5_new.pdb
-ligandPdb Str ICAM_Btype.pdb
-     # |  Score  | filt| ZScore |  SAXS  | Zscore |  SOAP     | Zscore | Transformation
-     1 |  -3.559 |  +  | -2.503 |  2.147 | -1.055 | -1610.932 | -2.504 |  -1.636 -0.108 0.361 -40.146 -84.326 -72.529
-     2 |  -3.461 |  +  | -2.434 |  1.812 | -1.292 | -1429.678 | -2.169 |  -1.357 0.112 0.608 -29.160 -68.705 -80.858
-""")
+            j.make_file(
+                "results_saxs.txt",
+                "receptorPdb Str 5_new.pdb\n"
+                "ligandPdb Str ICAM_Btype.pdb\n"
+                "     # |  Score  | filt| ZScore |  SAXS  | Zscore "
+                "|  SOAP     | Zscore | Transformation\n"
+                "     1 |  -3.559 |  +  | -2.503 |  2.147 | -1.055 "
+                "| -1610.932 | -2.504 |  -1.636 -0.108 0.361 -40.146 "
+                "-84.326 -72.529\n"
+                "     2 |  -3.461 |  +  | -2.434 |  1.812 | -1.292 "
+                "| -1429.678 | -2.169 |  -1.357 0.112 0.608 -29.160 "
+                "-68.705 -80.858\n")
             c = foxsdock.app.test_client()
             rv = c.get('/job/testjob4/fit2?passwd=%s' % j.passwd)
             r = re.compile(
@@ -106,6 +121,7 @@ ligandPdb Str ICAM_Btype.pdb
                     rb'\&chi;<sup>2</sup> = 28.2913 c1 = 1.05 c2 = 4',
                     re.MULTILINE | re.DOTALL)
             self.assertRegex(rv.data, r)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -33,6 +33,7 @@ expire: 1d
 script_directory: sdir
 """
 
+
 class Tests(saliweb.test.TestCase):
     """Check custom Config class"""
 
@@ -43,6 +44,7 @@ class Tests(saliweb.test.TestCase):
         c = foxsdock.Config('test.config')
         self.assertEqual(c.script_directory, "sdir")
         os.unlink('test.config')
+
 
 if __name__ == '__main__':
     unittest.main()

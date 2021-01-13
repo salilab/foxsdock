@@ -1,7 +1,10 @@
 import saliweb.backend
-import os, sys, stat
+import os
 
-class LogError(Exception): pass
+
+class LogError(Exception):
+    pass
+
 
 class Job(saliweb.backend.Job):
     runnercls = saliweb.backend.WyntonSGERunner
@@ -32,18 +35,19 @@ perl %s/runIDockServer.pl %s >& foxsdock.log
                 # This is usually caused by user error, so report it to them
                 if 'PatchDock found no docking solutions' in line:
                     return
-                if error is None and \
-                   ('No such file' in line or "Can't find" in line
-                    and "Can't find light chain" not in line
-                    and "Can't find heavy chain" not in line
-                    and "Can't find atom with atom index 0" not in line):
-                    error = LogError("Job reported an error in foxsdock.log: %s"
-                                     % line)
+                if (error is None and
+                    ('No such file' in line or "Can't find" in line
+                     and "Can't find light chain" not in line
+                     and "Can't find heavy chain" not in line
+                     and "Can't find atom with atom index 0" not in line)):
+                    error = LogError(
+                        "Job reported an error in foxsdock.log: %s" % line)
         if error:
             raise error
 
     def complete(self):
         os.chmod(".", 0o775)
+
 
 class Config(saliweb.backend.Config):
     def populate(self, config):
@@ -56,4 +60,3 @@ def get_web_service(config_file):
     db = saliweb.backend.Database(Job)
     config = Config(config_file)
     return saliweb.backend.WebService(config, db)
-

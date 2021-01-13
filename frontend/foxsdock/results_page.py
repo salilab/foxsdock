@@ -6,9 +6,9 @@ import re
 import os
 import shutil
 
-Transform = collections.namedtuple('Transform',
-        ['number', 'zscore', 'saxs_score', 'energy_score', 'transform',
-         'pdb', 'fit'])
+Transform = collections.namedtuple(
+    'Transform', ['number', 'zscore', 'saxs_score', 'energy_score',
+                  'transform', 'pdb', 'fit'])
 
 
 def get_transforms(job, show_from, show_to):
@@ -22,7 +22,8 @@ def get_transforms(job, show_from, show_to):
                 if num_transforms >= show_from and num_transforms <= show_to:
                     trans = spl[-1].split()
                     trans = " ".join("%.2f" % float(t) for t in trans)
-                    transforms.append(Transform(number=num_transforms,
+                    transforms.append(Transform(
+                        number=num_transforms,
                         zscore=spl[1].strip(),
                         saxs_score=spl[4].strip(),
                         energy_score=spl[6].strip(),
@@ -43,7 +44,8 @@ def show_results_page(job):
     receptor, ligand, profile, complex_type = read_input_txt(job)
 
     num_transforms, transforms = get_transforms(job, show_from, show_to)
-    return saliweb.frontend.render_results_template("results_ok.html",
+    return saliweb.frontend.render_results_template(
+        "results_ok.html",
         receptor=receptor, ligand=ligand, profile=profile,
         complex_type=complex_type,
         transforms=transforms, show_from=show_from, show_to=show_to,
@@ -62,10 +64,11 @@ def get_model_fit_page(job, fp, config):
         if not os.path.exists(job.get_path(fitpng)):
             fitpng = None
         fitdat = "%s_%s.dat" % (pdb_code, os.path.splitext(profile)[0])
-        return saliweb.frontend.render_results_template("fit.html",
-                job=job, number=trans_num, profile=profile, dockpdb=dockpdb,
-                fitpng=fitpng, fitdat=fitdat, pdb_code=pdb_code,
-                chi=chi, c1=c1, c2=c2)
+        return saliweb.frontend.render_results_template(
+            "fit.html",
+            job=job, number=trans_num, profile=profile, dockpdb=dockpdb,
+            fitpng=fitpng, fitdat=fitdat, pdb_code=pdb_code,
+            chi=chi, c1=c1, c2=c2)
     else:
         abort(404)
 
@@ -78,10 +81,10 @@ def get_foxs_fit(job, pdb, profile, trans_num, config):
                 [foxs, '-g', pdb, profile], cwd=job.directory)
         gnuplot = config['FOXSDOCK_GNUPLOT']
         os.path.splitext(profile)[0]
-        subprocess.check_call([gnuplot,
-                               "docking_%d_%s.plt" % (trans_num,
-                                   os.path.splitext(profile)[0])],
-                              cwd=job.directory)
+        subprocess.check_call(
+            [gnuplot,
+             "docking_%d_%s.plt" % (trans_num, os.path.splitext(profile)[0])],
+            cwd=job.directory)
         with open(foxs_log, 'wb') as fh:
             fh.write(out)
 
@@ -101,6 +104,7 @@ def get_model_pdb(job, fp, config):
         return send_from_directory(job.directory, dockpdb)
     else:
         abort(404)
+
 
 def get_dock_pdb(job, trans_num, config):
     num_transforms = 0
@@ -132,6 +136,7 @@ def apply_trans(job, receptor, ligand, trans_num, trans, config):
                         [pdb_trans] + trans.split(), stdin=fh_in)
                 fh.write(out)
     return dockfile
+
 
 def get_int(name, default):
     try:

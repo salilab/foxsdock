@@ -2,7 +2,7 @@ import unittest
 import foxsdock
 import saliweb.test
 import saliweb.backend
-import os
+
 
 class JobTests(saliweb.test.TestCase):
     """Check custom FoXSDock Job class"""
@@ -21,6 +21,7 @@ class JobTests(saliweb.test.TestCase):
         j = self.make_test_job(foxsdock.Job, 'RUNNING')
         with saliweb.test.working_directory(j.directory):
             j.complete()
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,7 +1,7 @@
 import unittest
 import foxsdock
 import saliweb.test
-import os
+
 
 class Tests(saliweb.test.TestCase):
 
@@ -11,7 +11,8 @@ class Tests(saliweb.test.TestCase):
         with saliweb.test.working_directory(j.directory):
             with open('foxsdock.log', 'w') as fh:
                 fh.write("everything ok\n")
-                # We ignore errors from rmsd3 when no transformations were found
+                # We ignore errors from rmsd3 when no transformations
+                # were found
                 fh.write("Input Error: Can't find atom with atom index 0!\n")
             j.postprocess()
 
@@ -32,7 +33,8 @@ class Tests(saliweb.test.TestCase):
         with saliweb.test.working_directory(j.directory):
             with open('foxsdock.log', 'w') as fh:
                 fh.write("everything ok\n")
-                fh.write("Input Error: Can't find atom with atom index 1677!\n")
+                fh.write(
+                    "Input Error: Can't find atom with atom index 1677!\n")
                 fh.write("ERROR: PatchDock found no docking solutions.\n")
             # Error should be ignored here (reported back to the user)
             j.postprocess()
@@ -42,10 +44,12 @@ class Tests(saliweb.test.TestCase):
         j = self.make_test_job(foxsdock.Job, 'RUNNING')
         with saliweb.test.working_directory(j.directory):
             for err in ("Can't find library file: ./chem.lib\n",
-                        "cut: clustered_saxs.res: No such file or directory\n"):
+                        "cut: clustered_saxs.res: "
+                        "No such file or directory\n"):
                 with open('foxsdock.log', 'w') as fh:
                     fh.write(err)
                 self.assertRaises(foxsdock.LogError, j.postprocess)
+
 
 if __name__ == '__main__':
     unittest.main()

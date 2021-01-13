@@ -6,7 +6,6 @@ import os
 
 
 def handle_new_job():
-    profile = request.form.get('saxsfile')
     email = request.form.get('email')
     moltype = request.form.get('moltype')
     weighted_score = request.form.get('weighted')
@@ -24,11 +23,11 @@ def handle_new_job():
     receptor = handle_pdb(request.form.get("receptor"),
                           request.files.get("recfile"), "receptor", job)
     ligand = handle_pdb(request.form.get("ligand"),
-                          request.files.get("ligfile"), "ligand", job)
+                        request.files.get("ligfile"), "ligand", job)
 
     saxsfile = handle_uploaded_file(
             request.files.get("saxsfile"), job, "SAXS profile file")
-    distfile = handle_uploaded_file(
+    handle_uploaded_file(
             request.files.get("distfile"), job, "distance constraints file",
             force_name="distance_constraints.txt")
 
