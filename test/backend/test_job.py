@@ -11,17 +11,16 @@ class JobTests(saliweb.test.TestCase):
         """Test successful run method"""
         j = self.make_test_job(foxsdock.Job, 'RUNNING')
         j.config.script_directory = 'foo'
-        d = saliweb.test.RunInDir(j.directory)
-        open('input.txt', 'w').write('input line1\ninput line2\n')
-        cls = j.run()
-        self.assert_(isinstance(cls, saliweb.backend.SGERunner),
-                     "SGERunner not returned")
+        with saliweb.test.working_directory(j.directory):
+            open('input.txt', 'w').write('input line1\ninput line2\n')
+            cls = j.run()
+            self.assertIsInstance(cls, saliweb.backend.SGERunner)
 
     def test_complete(self):
         """Test complete() method"""
         j = self.make_test_job(foxsdock.Job, 'RUNNING')
-        d = saliweb.test.RunInDir(j.directory)
-        j.complete()
+        with saliweb.test.working_directory(j.directory):
+            j.complete()
 
 if __name__ == '__main__':
     unittest.main()
