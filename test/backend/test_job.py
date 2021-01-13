@@ -12,7 +12,8 @@ class JobTests(saliweb.test.TestCase):
         j = self.make_test_job(foxsdock.Job, 'RUNNING')
         j.config.script_directory = 'foo'
         with saliweb.test.working_directory(j.directory):
-            open('input.txt', 'w').write('input line1\ninput line2\n')
+            with open('input.txt', 'w') as fh:
+                fh.write('input line1\ninput line2\n')
             cls = j.run()
             self.assertIsInstance(cls, saliweb.backend.SGERunner)
 
