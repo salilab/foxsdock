@@ -35,9 +35,17 @@ class Tests(saliweb.test.TestCase):
             with open(saxsf, 'w') as fh:
                 fh.write("0.00000    9656627.00000000 2027.89172363\n")
 
-            # Successful submission (no email)
+            # No profile uploaded
             data = {'moltype': 'Default', 'jobname': 'foobar',
                     'recfile': open(pdbf, 'rb'), 'ligfile': open(pdbf, 'rb')}
+            rv = c.post('/job', data=data)
+            self.assertEqual(rv.status_code, 400)
+            self.assertIn(b'No SAXS profile uploaded!', rv.data)
+
+            # Successful submission (no email)
+            data = {'moltype': 'Default', 'jobname': 'foobar',
+                    'recfile': open(pdbf, 'rb'), 'ligfile': open(pdbf, 'rb'),
+                    'saxsfile': open(saxsf, 'rb')}
             rv = c.post('/job', data=data)
             self.assertEqual(rv.status_code, 200)
             r = re.compile(b'Your job <b>foobar</b> has been submitted.*'
@@ -50,16 +58,19 @@ class Tests(saliweb.test.TestCase):
                 contents = fh.read()
             self.assertEqual(
                 contents,
-                "test.pdb test.pdb --saxs - --complex_type Default None\n")
+                "test.pdb test.pdb --saxs test.profile "
+                "--complex_type Default None\n")
             with open(os.path.join(incoming, 'foobar', 'input.txt')) as fh:
                 contents = fh.read()
             self.assertEqual(
                 contents,
-                "test.pdb test.pdb --saxs - --complex_type Default\n")
+                "test.pdb test.pdb --saxs test.profile "
+                "--complex_type Default\n")
 
             # Successful submission (with email)
             data = {'moltype': 'Default', 'email': 'test@example.com',
-                    'recfile': open(pdbf, 'rb'), 'ligfile': open(pdbf, 'rb')}
+                    'recfile': open(pdbf, 'rb'), 'ligfile': open(pdbf, 'rb'),
+                    'saxsfile': open(saxsf, 'rb')}
             rv = c.post('/job', data=data)
             self.assertEqual(rv.status_code, 200)
             r = re.compile(rb'Your job <b>job\S*</b> has been submitted.*'

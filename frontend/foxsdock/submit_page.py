@@ -27,6 +27,8 @@ def handle_new_job():
 
     saxsfile = handle_uploaded_file(
             request.files.get("saxsfile"), job, "SAXS profile file")
+    if saxsfile is None:
+        raise InputValidationError("No SAXS profile uploaded!")
     handle_uploaded_file(
             request.files.get("distfile"), job, "distance constraints file",
             force_name="distance_constraints.txt")
@@ -71,10 +73,10 @@ def handle_pdb(pdb_code, pdb_file, pdb_type, job):
 
 def handle_uploaded_file(fh, job, description, force_name=None):
     """Save an uploaded file into the job directory.
-       Return the filename (sanitized) or "-" if not specified."""
+       Return the filename (sanitized) or None if not specified."""
     if not fh:
-        return "-"
-    fname = force_name or secure_filename(fh.filename)
+        return
+    fname = force_name or secure_filename(os.path.basename(fh.filename))
     full_fname = job.get_path(fname)
     fh.save(full_fname)
     if os.stat(full_fname).st_size == 0:
