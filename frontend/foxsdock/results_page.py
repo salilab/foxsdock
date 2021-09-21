@@ -39,8 +39,8 @@ def read_input_txt(job):
 
 
 def show_results_page(job):
-    show_from = get_int('from', 1)
-    show_to = get_int('to', 20)
+    show_from = request.args.get('from', 1, type=int)
+    show_to = request.args.get('to', 20, type=int)
     receptor, ligand, profile, complex_type = read_input_txt(job)
 
     num_transforms, transforms = get_transforms(job, show_from, show_to)
@@ -136,10 +136,3 @@ def apply_trans(job, receptor, ligand, trans_num, trans, config):
                         [pdb_trans] + trans.split(), stdin=fh_in)
                 fh.write(out)
     return dockfile
-
-
-def get_int(name, default):
-    try:
-        return int(request.args.get(name, ""))
-    except ValueError:
-        return default
