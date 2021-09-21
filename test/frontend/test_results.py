@@ -88,7 +88,8 @@ class Tests(saliweb.test.TestCase):
                     rb'docking_2 Fit to experimental profile.*'
                     rb'Profile fit not generated.*docking_2_iq\.dat.*'
                     rb'Experimental profile fit file.*'
-                    rb'\&chi;<sup>2</sup> = 28.2913 c1 = 1.05 c2 = 4',
+                    rb'\&chi;<sup>2</sup> = 28.2913 c<sub>1</sub> = 1.05 '
+                    rb'c<sub>2</sub> = 4',
                     re.MULTILINE | re.DOTALL)
             self.assertRegex(rv.data, r)
 
@@ -118,7 +119,8 @@ class Tests(saliweb.test.TestCase):
                     rb'docking_2 Fit to experimental profile.*'
                     rb'docking_2_iq\.png.*docking_2_iq\.dat.*'
                     rb'Experimental profile fit file.*'
-                    rb'\&chi;<sup>2</sup> = 28.2913 c1 = 1.05 c2 = 4',
+                    rb'\&chi;<sup>2</sup> = 28.2913 c<sub>1</sub> = 1.05 '
+                    rb'c<sub>2</sub> = 4',
                     re.MULTILINE | re.DOTALL)
             self.assertRegex(rv.data, r)
 
