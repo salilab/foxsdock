@@ -213,6 +213,23 @@ class Tests(saliweb.test.TestCase):
                     j, 'test.pdb', 'test.profile', 1, config)
         self.assertIsNone(r)
 
+    def test_apply_trans(self):
+        """Test apply_trans()"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            j = MockJob(tmpdir)
+            j.make_file('receptor.pdb', 'test receptor\n')
+            j.make_file('ligand.pdb', 'test ligand\n')
+            pdb_trans = j.make_exe('pdb_trans',
+                                   '#!/bin/sh\necho pdb_trans ran ok $*\n')
+            config = {'FOXSDOCK_PDB_TRANS': pdb_trans}
+            r = foxsdock.results_page.apply_trans(
+                    j, 'receptor.pdb', 'ligand.pdb', 42, 'tran1 tran2', config)
+            with open(j.get_path('docking_42.pdb')) as fh:
+                contents = fh.read()
+        self.assertEqual(r, 'docking_42.pdb')
+        self.assertEqual(contents,
+                         "test receptor\npdb_trans ran ok tran1 tran2\n")
+
 
 if __name__ == '__main__':
     unittest.main()
