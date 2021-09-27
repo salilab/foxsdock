@@ -190,8 +190,8 @@ class Tests(saliweb.test.TestCase):
         """Test get_foxs_fit() with OK output"""
         with tempfile.TemporaryDirectory() as tmpdir:
             j = MockJob(tmpdir)
-            foxs = j.make_exe('foxs',
-                              '#!/bin/sh\necho Chi^2 = 1.0 c1 = 2.0 c2 = 3.0\n')
+            foxs = j.make_exe(
+                'foxs', '#!/bin/sh\necho Chi^2 = 1.0 c1 = 2.0 c2 = 3.0\n')
             gnuplot = j.make_exe('gnuplot', '#!/bin/sh\n')
             config = {'FOXSDOCK_FOXS': foxs,
                       'FOXSDOCK_GNUPLOT': gnuplot}
