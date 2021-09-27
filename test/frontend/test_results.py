@@ -70,6 +70,8 @@ class Tests(saliweb.test.TestCase):
                     rb'Model No.*Z\-Score.*Download output file',
                     re.MULTILINE | re.DOTALL)
             self.assertRegex(rv.data, r)
+            # Check display off the end of # of transforms
+            rv = c.get('/job/testjob2?passwd=%s&from=60&to=80' % j.passwd)
 
     def test_failed_job(self):
         """Test display of failed job"""
