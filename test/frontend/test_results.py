@@ -124,6 +124,17 @@ class Tests(saliweb.test.TestCase):
                     re.MULTILINE | re.DOTALL)
             self.assertRegex(rv.data, r)
 
+    def test_get_model_fit_no_pdb(self):
+        """Test get_model_fit_page, with no PDB"""
+        with saliweb.test.make_frontend_job('testjob5') as j:
+            make_input_txt(j)
+            j.make_file("foxs_2.log", """
+1abc.pdb saxs.dat Chi^2 = 28.2913 c1 = 1.05 c2 = 4 default chi^2 = 45.8281""")
+            j.make_file("results_saxs.txt")
+            c = foxsdock.app.test_client()
+            rv = c.get('/job/testjob5/fit2?passwd=%s' % j.passwd)
+            self.assertEqual(rv.status_code, 404)
+
 
 if __name__ == '__main__':
     unittest.main()
