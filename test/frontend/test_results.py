@@ -1,10 +1,31 @@
 import unittest
 import saliweb.test
 import re
+import os
+import tempfile
 
 # Import the foxsdock frontend with mocks
 foxsdock = saliweb.test.import_mocked_frontend("foxsdock", __file__,
                                                '../../frontend')
+
+
+class MockJob(object):
+    def __init__(self, cwd):
+        self.directory = cwd
+
+    def get_path(self, fname):
+        return os.path.join(self.directory, fname)
+
+    def make_file(self, fname, contents):
+        pth = self.get_path(fname)
+        with open(pth, 'w') as fh:
+            fh.write(contents)
+        return pth
+
+    def make_exe(self, fname, contents):
+        pth = self.make_file(fname, contents)
+        os.chmod(pth, 0o755)
+        return pth
 
 
 def make_input_txt(j):
@@ -164,6 +185,33 @@ class Tests(saliweb.test.TestCase):
             c = foxsdock.app.test_client()
             rv = c.get('/job/testjob7/result2.pdb?passwd=%s' % j.passwd)
             self.assertEqual(rv.status_code, 404)
+
+    def test_get_foxs_fit_ok(self):
+        """Test get_foxs_fit() with OK output"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            j = MockJob(tmpdir)
+            foxs = j.make_exe('foxs',
+                              '#!/bin/sh\necho Chi^2 = 1.0 c1 = 2.0 c2 = 3.0\n')
+            gnuplot = j.make_exe('gnuplot', '#!/bin/sh\n')
+            config = {'FOXSDOCK_FOXS': foxs,
+                      'FOXSDOCK_GNUPLOT': gnuplot}
+            chi, c1, c2 = foxsdock.results_page.get_foxs_fit(
+                    j, 'test.pdb', 'test.profile', 1, config)
+        self.assertEqual(chi, '1.0')
+        self.assertEqual(c1, '2.0')
+        self.assertEqual(c2, '3.0')
+
+    def test_get_foxs_fit_bad(self):
+        """Test get_foxs_fit() with no output"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            j = MockJob(tmpdir)
+            foxs = j.make_exe('foxs', '#!/bin/sh\n')
+            gnuplot = j.make_exe('gnuplot', '#!/bin/sh\n')
+            config = {'FOXSDOCK_FOXS': foxs,
+                      'FOXSDOCK_GNUPLOT': gnuplot}
+            r = foxsdock.results_page.get_foxs_fit(
+                    j, 'test.pdb', 'test.profile', 1, config)
+        self.assertIsNone(r)
 
 
 if __name__ == '__main__':
