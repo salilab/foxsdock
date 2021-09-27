@@ -135,6 +135,36 @@ class Tests(saliweb.test.TestCase):
             rv = c.get('/job/testjob5/fit2?passwd=%s' % j.passwd)
             self.assertEqual(rv.status_code, 404)
 
+    def test_get_model_pdb(self):
+        """Test get_model_pdb, with PDB"""
+        with saliweb.test.make_frontend_job('testjob6') as j:
+            make_input_txt(j)
+            j.make_file("docking_2.pdb", "foobar")
+            j.make_file(
+                "results_saxs.txt",
+                "receptorPdb Str 5_new.pdb\n"
+                "ligandPdb Str ICAM_Btype.pdb\n"
+                "     # |  Score  | filt| ZScore |  SAXS  | Zscore "
+                "|  SOAP     | Zscore | Transformation\n"
+                "     1 |  -3.559 |  +  | -2.503 |  2.147 | -1.055 "
+                "| -1610.932 | -2.504 |  -1.636 -0.108 0.361 -40.146 "
+                "-84.326 -72.529\n"
+                "     2 |  -3.461 |  +  | -2.434 |  1.812 | -1.292 "
+                "| -1429.678 | -2.169 |  -1.357 0.112 0.608 -29.160 "
+                "-68.705 -80.858\n")
+            c = foxsdock.app.test_client()
+            rv = c.get('/job/testjob6/result2.pdb?passwd=%s' % j.passwd)
+            self.assertEqual(rv.data, b'foobar')
+
+    def test_get_model_pdb_no_pdb(self):
+        """Test get_model_pdb, with no PDB"""
+        with saliweb.test.make_frontend_job('testjob7') as j:
+            make_input_txt(j)
+            j.make_file("results_saxs.txt")
+            c = foxsdock.app.test_client()
+            rv = c.get('/job/testjob7/result2.pdb?passwd=%s' % j.passwd)
+            self.assertEqual(rv.status_code, 404)
+
 
 if __name__ == '__main__':
     unittest.main()
