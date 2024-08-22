@@ -30,4 +30,6 @@ jobs:
         scons coverage=true python=$(which python) test
         flake8 .
         python -m coverage combine && python -m coverage xml && python -m coverage erase
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@v4
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
