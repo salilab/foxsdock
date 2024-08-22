@@ -12,7 +12,7 @@
 </table>
 
 <table border="0" cellpadding="5" cellspacing="0" width="99%">
-<tr><td align="left"><a href="{{ url_for("help") }}"><b>Receptor</b></a></td> <td align="left"><input type="text" name="receptor"  size="10" maxlength="10" /> (PDB:chainId e.g. 2kai:AB)</td> <td align="left"><b>or</b> upload file: <input type="file" name="recfile"  size="10" /></td></tr>
+<tr><td align="left"><a href="{{ url_for("help") }}"><b>Receptor</b></a></td> <td align="left"><input type="text" name="receptor"  size="10" maxlength="10" /> (PDB:chainId e.g. 2kai:A,B)</td> <td align="left"><b>or</b> upload file: <input type="file" name="recfile"  size="10" /></td></tr>
 <tr><td align="left"><a href="{{ url_for("help") }}"><b>Ligand</b></a></td> <td align="left"><input type="text" name="ligand"  size="10" maxlength="10" /> (PDB:chainId e.g. 2kai:I)</td> <td align="left"><b>or</b> upload file: <input type="file" name="ligfile"  size="10" /></td></tr>
 <tr><td align="left"><a href="{{ url_for("help") }}"><b>Complex SAXS profile</b></a></td> <td align="left"><input type="file" name="saxsfile"  size="10" /></td></tr>
 <tr><td align="left"><a href="{{ url_for("help") }}"><b>e-mail address</b></a></td> <td align="left"><input type="text" name="email" value="{{ g.user.email }}" /></td> <td align="left">(the results are sent to this address, optional)</td></tr>
